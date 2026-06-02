@@ -1,0 +1,375 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f7f7f4;
+  --foreground: #111111;
+  --muted: #6d6d69;
+  --line: #d8d8d2;
+  --panel: #eeeeea;
+  --shadow: rgba(17, 17, 17, 0.18);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at 75% 10%, rgba(17, 17, 17, 0.08), transparent 22%),
+    linear-gradient(130deg, transparent 0 48%, rgba(17, 17, 17, 0.055) 48% 49%, transparent 49% 100%),
+    linear-gradient(90deg, rgba(17, 17, 17, 0.035) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(17, 17, 17, 0.025) 1px, transparent 1px),
+    var(--background);
+  background-size: auto, auto, 96px 96px, 96px 96px, auto;
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  letter-spacing: 0;
+}
+
+a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+::selection {
+  background: #111111;
+  color: #f7f7f4;
+}
+
+.media-grain {
+  background-image:
+    linear-gradient(90deg, rgba(17, 17, 17, 0.08) 1px, transparent 1px),
+    linear-gradient(rgba(17, 17, 17, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.portrait-field {
+  background:
+    radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.7), transparent 18%),
+    linear-gradient(180deg, #deded8 0%, #cfcfc8 50%, #eeeeea 100%);
+}
+
+.surface-3d {
+  position: relative;
+  box-shadow: 12px 12px 0 var(--shadow), 0 0 0 1px rgba(17, 17, 17, 0.04);
+}
+
+.surface-3d::after {
+  border-bottom: 1px solid rgba(17, 17, 17, 0.28);
+  border-right: 1px solid rgba(17, 17, 17, 0.28);
+  content: "";
+  inset: 8px -8px -8px 8px;
+  pointer-events: none;
+  position: absolute;
+  z-index: -1;
+}
+
+.tilt-plane {
+  transform: perspective(900px) rotateX(1deg) rotateY(-2deg);
+  transform-origin: center;
+}
+
+.text-archive {
+  text-wrap: pretty;
+}
+
+.clipping-grid {
+  column-count: 1;
+  column-gap: 24px;
+}
+
+.clipping-card {
+  background: var(--background);
+  border: 1px solid var(--line);
+  break-inside: avoid;
+  display: inline-block;
+  margin: 0 0 32px;
+  padding: 12px;
+  position: relative;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+  width: 100%;
+}
+
+.clipping-card::before {
+  background: repeating-linear-gradient(90deg, var(--foreground) 0 12px, transparent 12px 18px);
+  content: "";
+  height: 4px;
+  left: 12px;
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  z-index: 2;
+}
+
+.clipping-card:nth-child(4n + 2) {
+  transform: translateY(18px) rotate(-0.35deg);
+}
+
+.clipping-card:nth-child(4n + 3) {
+  transform: translateY(-8px) rotate(0.4deg);
+}
+
+.clipping-card:hover {
+  box-shadow: 10px 10px 0 rgba(17, 17, 17, 0.16);
+  transform: translateY(-4px);
+}
+
+.clipping-button {
+  background: transparent;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  display: block;
+  margin: 0 0 16px;
+  padding: 0;
+  text-align: left;
+  width: 100%;
+}
+
+.clipping-image {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  display: block;
+  overflow: hidden;
+  position: relative;
+  transform: perspective(1000px) rotateX(0deg) rotateY(0deg);
+  transition: box-shadow 220ms ease, transform 220ms ease;
+  width: 100%;
+}
+
+.clipping-image img {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  transition: filter 220ms ease, transform 360ms ease;
+  width: 100%;
+}
+
+.clipping-card[data-active="true"] .clipping-image {
+  box-shadow: 9px 9px 0 rgba(17, 17, 17, 0.16);
+  transform: perspective(1000px) rotateX(1.2deg) rotateY(-1.8deg);
+}
+
+.clipping-card[data-active="true"] .clipping-image img {
+  filter: contrast(1.04) saturate(1.05);
+  transform: scale(1.015);
+}
+
+.clipping-play-badge {
+  background: var(--foreground);
+  border: 1px solid var(--foreground);
+  color: var(--background);
+  font-size: 10px;
+  left: 50%;
+  letter-spacing: 0.08em;
+  padding: 8px 12px;
+  pointer-events: none;
+  position: absolute;
+  text-transform: uppercase;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  transition: opacity 180ms ease, transform 180ms ease;
+  white-space: nowrap;
+}
+
+.clipping-card[data-active="true"] .clipping-play-badge {
+  background: var(--background);
+  color: var(--foreground);
+  transform: translate(-50%, -50%) translateY(-8px);
+}
+
+.clipping-button:hover .clipping-play-badge {
+  transform: translate(-50%, -50%) translateY(-4px);
+}
+
+.motion-view {
+  inset: 0;
+  isolation: isolate;
+  position: fixed;
+  z-index: 80;
+}
+
+.motion-backdrop {
+  background:
+    linear-gradient(90deg, rgba(247, 247, 244, 0.12) 1px, transparent 1px),
+    linear-gradient(rgba(247, 247, 244, 0.1) 1px, transparent 1px),
+    rgba(10, 10, 10, 0.84);
+  background-size: 36px 36px, 36px 36px, auto;
+  border: 0;
+  inset: 0;
+  position: absolute;
+}
+
+.motion-panel {
+  background: var(--background);
+  border: 1px solid var(--foreground);
+  box-shadow: 18px 18px 0 rgba(247, 247, 244, 0.14);
+  left: 50%;
+  max-height: calc(100vh - 48px);
+  max-width: min(760px, calc(100vw - 32px));
+  overflow: auto;
+  padding: 16px;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(58vh, 720px);
+}
+
+.motion-stage {
+  background: #111111;
+  border: 1px solid var(--line);
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.motion-base,
+.motion-cut img {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.motion-base {
+  filter: contrast(0.96) saturate(0.92);
+}
+
+.motion-cut {
+  clip-path: var(--clip);
+  filter: contrast(1.12) saturate(1.12);
+  inset: 0;
+  mix-blend-mode: normal;
+  position: absolute;
+  transform-origin: center;
+  will-change: transform, filter;
+}
+
+.motion-drift-a {
+  animation: motion-drift-a 2300ms ease-in-out infinite alternate;
+}
+
+.motion-drift-b {
+  animation: motion-drift-b 2700ms ease-in-out infinite alternate;
+}
+
+.motion-drift-c {
+  animation: motion-drift-c 3100ms ease-in-out infinite alternate;
+}
+
+.motion-hand {
+  animation: motion-hand 1700ms ease-in-out infinite alternate;
+}
+
+.motion-water {
+  animation: motion-water 2100ms ease-in-out infinite alternate;
+}
+
+.motion-light {
+  animation: motion-light 1600ms ease-in-out infinite alternate;
+}
+
+.motion-swirl {
+  animation: motion-swirl 2500ms ease-in-out infinite alternate;
+}
+
+@keyframes motion-drift-a {
+  from {
+    filter: contrast(1.08) saturate(1.05);
+    transform: translate3d(-16px, -8px, 0) rotate(-1.4deg) scale(1.02);
+  }
+
+  to {
+    filter: contrast(1.2) saturate(1.16);
+    transform: translate3d(18px, 10px, 0) rotate(1.8deg) scale(1.045);
+  }
+}
+
+@keyframes motion-drift-b {
+  from {
+    transform: translate3d(18px, 8px, 0) rotate(1.1deg) scale(1.035);
+  }
+
+  to {
+    transform: translate3d(-20px, -12px, 0) rotate(-1.7deg) scale(1.055);
+  }
+}
+
+@keyframes motion-drift-c {
+  from {
+    transform: translate3d(-10px, 18px, 0) rotate(-0.8deg) scale(1.02);
+  }
+
+  to {
+    transform: translate3d(14px, -16px, 0) rotate(1.2deg) scale(1.04);
+  }
+}
+
+@keyframes motion-hand {
+  from {
+    transform: translate3d(-10px, 2px, 0) rotate(-3deg) scale(1.025);
+  }
+
+  to {
+    transform: translate3d(18px, -8px, 0) rotate(3.5deg) scale(1.055);
+  }
+}
+
+@keyframes motion-water {
+  from {
+    filter: hue-rotate(-6deg) contrast(1.06);
+    transform: translate3d(-22px, 6px, 0) scale(1.04);
+  }
+
+  to {
+    filter: hue-rotate(8deg) contrast(1.18);
+    transform: translate3d(24px, -7px, 0) scale(1.07);
+  }
+}
+
+@keyframes motion-light {
+  from {
+    filter: brightness(0.92) contrast(1.05);
+    transform: translate3d(-8px, -12px, 0) scale(1.02);
+  }
+
+  to {
+    filter: brightness(1.18) contrast(1.24);
+    transform: translate3d(10px, 14px, 0) scale(1.055);
+  }
+}
+
+@keyframes motion-swirl {
+  from {
+    transform: translate3d(-15px, 10px, 0) rotate(-2deg) scale(1.03);
+  }
+
+  to {
+    transform: translate3d(15px, -10px, 0) rotate(2deg) scale(1.07);
+  }
+}
+
+@media (min-width: 768px) {
+  .clipping-grid {
+    column-count: 2;
+  }
+}
+
+@media (min-width: 1280px) {
+  .clipping-grid {
+    column-count: 3;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-cut {
+    animation: none;
+  }
+}
