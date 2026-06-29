@@ -5,7 +5,7 @@ import { LanguageProvider } from "@/components/language-provider";
 
 export const metadata: Metadata = {
   title: "Choco Design Studio",
-  description: "Let’s have a tea for two. A personal portfolio and static AI fashion demo.",
+  description: "Let’s have a tea for two. A personal portfolio and interactive tea studio.",
 };
 
 export default function RootLayout({
