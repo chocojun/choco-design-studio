@@ -1,69 +1,90 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
 import type { ReactNode } from "react";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { FluidPageEffects } from "@/components/fluid-page-effects";
 import { useLanguage } from "@/components/language-provider";
+import { MusicPlayer } from "@/components/music-player";
 
 export function SiteShell({ children }: { children: ReactNode }) {
   const { text } = useLanguage();
+  const pathname = usePathname();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navItems = [
     { href: "/", label: text.nav.index },
     { href: "/work", label: text.nav.work },
-    { href: "/ai", label: text.nav.ai },
     { href: "/about", label: text.nav.about },
     { href: "/contact", label: text.nav.contact },
   ];
 
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
-      <aside className="fixed left-0 top-0 z-20 hidden h-screen w-[220px] border-r border-[var(--line)] px-6 py-6 md:flex md:flex-col md:justify-between">
-        <div>
-          <Link href="/" className="block text-[11px] uppercase leading-tight no-underline">
-            Choco
-            <br />
-            Design Studio
+      <header className="site-header">
+        <div className="site-header-inner">
+          <Link href="/" className="brand-mark" onClick={() => setIsMenuOpen(false)}>
+            <span>Lavie</span>
           </Link>
-          <nav className="mt-16 flex flex-col gap-2 text-[11px] uppercase text-[var(--muted)]">
+
+          <nav aria-label="Primary navigation" className="desktop-nav">
             {navItems.map((item) => (
-              <Link key={item.href} href={item.href}>
+              <Link
+                aria-current={pathname === item.href ? "page" : undefined}
+                key={item.href}
+                href={item.href}
+              >
                 {item.label}
               </Link>
             ))}
           </nav>
-        </div>
-        <div className="text-[10px] uppercase leading-relaxed text-[var(--muted)]">
-          <LanguageSwitcher />
-          <br />
-          {text.shell.portfolio}
-          <br />
-          {text.shell.ai}
-        </div>
-      </aside>
 
-      <header className="sticky top-0 z-20 border-b border-[var(--line)] bg-[var(--background)]/95 px-4 py-4 backdrop-blur md:hidden">
-        <div className="flex items-center justify-between">
-          <Link href="/" className="text-[11px] uppercase no-underline">
-            Choco Design Studio
-          </Link>
-          <LanguageSwitcher />
+          <div className="site-tools">
+            <LanguageSwitcher />
+            <button
+              aria-controls="mobile-menu"
+              aria-expanded={isMenuOpen}
+              className="menu-button"
+              onClick={() => setIsMenuOpen((value) => !value)}
+              type="button"
+            >
+              <span className="sr-only">Toggle navigation menu</span>
+              <span aria-hidden="true">{isMenuOpen ? "Close" : "Menu"}</span>
+            </button>
+          </div>
         </div>
-        <nav className="mt-3 flex gap-3 text-[10px] uppercase text-[var(--muted)]">
-          {navItems.slice(1).map((item) => (
-            <Link key={item.href} href={item.href}>
-              {item.label}
-            </Link>
-          ))}
+
+        <nav
+          aria-label="Mobile navigation"
+          className={`mobile-menu ${isMenuOpen ? "is-open" : ""}`}
+          id="mobile-menu"
+        >
+          <div className="mobile-menu-grid">
+            {navItems.map((item) => (
+              <Link
+                aria-current={pathname === item.href ? "page" : undefined}
+                key={item.href}
+                href={item.href}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
+          <LanguageSwitcher />
         </nav>
       </header>
 
-      <main className="md:pl-[220px]">{children}</main>
+      <main>{children}</main>
+      <FluidPageEffects />
+      <MusicPlayer />
     </div>
   );
 }
 
 export function PageFrame({ children }: { children: ReactNode }) {
-  return <div className="min-h-screen px-4 py-8 md:px-10 md:py-10">{children}</div>;
+  return <div className="page-frame">{children}</div>;
 }
 
 export function MediaPlaceholder({

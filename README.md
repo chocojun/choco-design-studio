@@ -1,4 +1,4 @@
-# Choco Design Studio
+# Lavie
 
 Minimal personal portfolio and interactive tea studio built with Next.js, TypeScript, Tailwind CSS, and the App Router.
 

@@ -16,22 +16,22 @@ export default function AboutPage() {
   return (
     <PageFrame>
       <section className="grid min-h-[calc(100vh-80px)] gap-12 md:grid-cols-[240px_minmax(320px,760px)]">
-        <div className="text-[10px] uppercase leading-relaxed text-[var(--muted)]">
+        <div className="fb-ui-label uppercase leading-relaxed text-[var(--muted)]">
           <p>{about.eyebrow}</p>
           <p className="mt-10">{about.edition}</p>
         </div>
 
         <div className="pt-14 md:pt-24">
           <div className="surface-3d border border-[var(--line)] bg-[var(--background)] p-5 md:p-7">
-            <p className="text-[10px] uppercase text-[var(--muted)]">Choco Design Studio</p>
-            <h1 className="mt-10 max-w-[560px] text-[18px] font-normal leading-snug">{about.title}</h1>
-            <p className="text-archive mt-10 max-w-[560px] leading-relaxed text-[12px] text-[var(--muted)]">
+            <p className="fb-ui-label uppercase text-[var(--muted)]">Lavie</p>
+            <h1 className="fb-page-title mt-10 max-w-[560px]">{about.title}</h1>
+            <p className="fb-body-sm text-archive mt-10 max-w-[560px] leading-relaxed text-[var(--muted)]">
               {about.float}
             </p>
           </div>
 
           <div className="mt-16 grid gap-8 md:grid-cols-[1fr_1fr]">
-            <div className="space-y-5 leading-relaxed text-[12px] text-[var(--muted)]">
+            <div className="fb-body-sm space-y-5 leading-relaxed text-[var(--muted)]">
               {about.lines.map((line) => (
                 <p className={line.startsWith("“") ? "text-[var(--foreground)]" : ""} key={line}>
                   {line}
@@ -39,22 +39,22 @@ export default function AboutPage() {
               ))}
             </div>
 
-            <div className="surface-3d border border-[var(--line)] bg-[var(--panel)] p-5 text-[11px] leading-relaxed text-[var(--muted)]">
-              <p className="text-[10px] uppercase">{about.location}</p>
+            <div className="fb-ui-control surface-3d border border-[var(--line)] bg-[var(--panel)] p-5 leading-relaxed text-[var(--muted)]">
+              <p className="fb-ui-label uppercase">{about.location}</p>
               {about.locationBody.map((line, index) => (
                 <p className={index === 0 ? "mt-6" : ""} key={line}>
                   {line}
                 </p>
               ))}
-              <p className="mt-6 text-[10px] uppercase">{about.open}</p>
+              <p className="fb-ui-label mt-6 uppercase">{about.open}</p>
               <p className="mt-4">{about.openBody}</p>
             </div>
           </div>
 
           <div className="mt-16 border-t border-[var(--line)]">
-            <p className="py-4 text-[10px] uppercase text-[var(--muted)]">{about.history}</p>
+            <p className="fb-ui-label py-4 uppercase text-[var(--muted)]">{about.history}</p>
             {history.map(([name, note]) => (
-              <div key={name} className="grid grid-cols-[120px_1fr] border-t border-[var(--line)] py-4 text-[12px]">
+              <div key={name} className="fb-ui-body grid grid-cols-[120px_1fr] border-t border-[var(--line)] py-4">
                 <span>{name}</span>
                 <span className="text-[var(--muted)]">{note}</span>
               </div>
@@ -65,15 +65,15 @@ export default function AboutPage() {
           <ArchiveSection title={about.languages} lines={about.languagesBody} />
 
           <div className="mt-16 grid gap-8 border-t border-[var(--line)] pt-8 md:grid-cols-[180px_1fr]">
-            <p className="text-[10px] uppercase text-[var(--muted)]">{about.belief}</p>
-            <div className="surface-3d border border-[var(--line)] bg-[var(--background)] p-5 leading-relaxed text-[12px] text-[var(--muted)]">
-              <p className="text-[10px] uppercase">2024</p>
+            <p className="fb-ui-label uppercase text-[var(--muted)]">{about.belief}</p>
+            <div className="fb-ui-body surface-3d border border-[var(--line)] bg-[var(--background)] p-5 leading-relaxed text-[var(--muted)]">
+              <p className="fb-ui-label uppercase">2024</p>
               {about.belief2024.map((line, index) => (
                 <p className={index === 0 ? "mt-4" : ""} key={line}>
                   {line}
                 </p>
               ))}
-              <p className="mt-8 text-[10px] uppercase">2025</p>
+              <p className="fb-ui-label mt-8 uppercase">2025</p>
               {about.belief2025.map((line, index) => (
                 <p className={index === 0 ? "mt-4" : ""} key={line}>
                   {line}
@@ -83,10 +83,10 @@ export default function AboutPage() {
           </div>
 
           <div className="mt-16 grid gap-8 border-t border-[var(--line)] pt-8 md:grid-cols-[180px_1fr]">
-            <p className="text-[10px] uppercase text-[var(--muted)]">{about.doubts}</p>
+            <p className="fb-ui-label uppercase text-[var(--muted)]">{about.doubts}</p>
             <div className="grid gap-3">
               {about.doubtList.map((doubt) => (
-                <p key={doubt} className="border border-[var(--line)] bg-[var(--panel)] px-4 py-3 text-[12px] text-[var(--muted)]">
+                <p key={doubt} className="fb-ui-body border border-[var(--line)] bg-[var(--panel)] px-4 py-3 text-[var(--muted)]">
                   {doubt}
                 </p>
               ))}
@@ -101,8 +101,8 @@ export default function AboutPage() {
 function ArchiveSection({ title, lines }: { title: string; lines: readonly string[] }) {
   return (
     <div className="mt-16 grid gap-8 border-t border-[var(--line)] pt-8 md:grid-cols-[180px_1fr]">
-      <p className="text-[10px] uppercase text-[var(--muted)]">{title}</p>
-      <div className="space-y-5 leading-relaxed text-[12px] text-[var(--muted)]">
+      <p className="fb-ui-label uppercase text-[var(--muted)]">{title}</p>
+      <div className="fb-body-sm space-y-5 leading-relaxed text-[var(--muted)]">
         {lines.map((line) => (
           <p key={line}>{line}</p>
         ))}

@@ -1,55 +1,79 @@
 "use client";
 
-import Link from "next/link";
-import { PageFrame } from "@/components/site-shell";
+import dynamic from "next/dynamic";
+import Image from "next/image";
 import { useLanguage } from "@/components/language-provider";
+import { PageFrame } from "@/components/site-shell";
+import type { Locale } from "@/lib/i18n";
+import styles from "./home.module.css";
+
+const MobiusField = dynamic(
+  () => import("@/components/mobius-field").then((module) => module.MobiusField),
+  { ssr: false },
+);
+
+type HomeCopy = {
+  statement: string;
+  statementBody: string;
+  contact: string;
+};
+
+const homeCopy: Record<Locale, HomeCopy> = {
+  en: {
+    statement: "Form becomes fluid. Identity becomes movement.",
+    statementBody:
+      "Lavie moves between fashion, objects, visual identity and digital culture.",
+    contact: "Let’s make something that moves.",
+  },
+  "zh-CN": {
+    statement: "形态开始流动，身份随之发生。",
+    statementBody: "Lavie 游走于时装、物件、视觉身份与数字文化之间。",
+    contact: "一起做点会流动的东西。",
+  },
+  "zh-TW": {
+    statement: "形態開始流動，身份隨之發生。",
+    statementBody: "Lavie 遊走於時裝、物件、視覺身份與數位文化之間。",
+    contact: "一起做點會流動的東西。",
+  },
+};
 
 export default function Home() {
-  const { text } = useLanguage();
+  const { locale } = useLanguage();
+  const copy = homeCopy[locale];
 
   return (
     <PageFrame>
-      <section className="grid min-h-[calc(100vh-80px)] gap-10 md:grid-cols-[minmax(240px,0.85fr)_minmax(360px,1.15fr)] md:gap-12">
-        <div className="flex max-w-[520px] flex-col justify-between">
-          <div>
-            <p className="text-[10px] uppercase text-[var(--muted)]">{text.home.eyebrow}</p>
-            <h1 className="mt-20 max-w-[420px] text-[18px] font-normal leading-snug md:mt-28">
-              {text.home.title}
-            </h1>
-            <p className="mt-10 max-w-[360px] leading-relaxed text-[12px] text-[var(--muted)]">
-              {text.home.body}
-            </p>
-          </div>
+      <div className={`${styles.scope} lavie-experience`}>
+        <MobiusField />
 
-          <div className="surface-3d mt-16 grid grid-cols-2 gap-x-8 gap-y-3 border border-[var(--line)] bg-[var(--background)] p-4 text-[11px] uppercase text-[var(--muted)]">
-            <span>{text.home.current}</span>
-            <Link href="/work">{text.home.work}</Link>
-            <span>{text.home.prototype}</span>
-            <Link href="/ai">{text.home.ai}</Link>
-            <span>{text.home.contact}</span>
-            <Link href="/contact">{text.home.email}</Link>
-          </div>
-        </div>
-
-        <div className="self-stretch">
-          <Link
-            aria-label="Open clipping archive"
-            className="surface-3d tilt-plane block overflow-hidden border border-[var(--line)] bg-[var(--panel)] no-underline"
-            href="/work"
-          >
-            <img
-              alt={text.home.featuredAlt}
-              className="block min-h-[560px] w-full object-cover"
-              loading="eager"
-              src="/clippings/01-tea-for-two.jpg"
+        <section aria-labelledby="home-title" className="lavie-hero">
+          <h1 className="sr-only" id="home-title">
+            Lavie
+          </h1>
+          <div className="lavie-logo-lockup">
+            <Image
+              alt="Lavie"
+              height={573}
+              priority
+              sizes="(max-width: 767px) 84vw, 62vw"
+              src="/assets/lavie-handwritten-logo.png"
+              width={1212}
             />
-          </Link>
-          <div className="mt-3 flex justify-between text-[10px] uppercase text-[var(--muted)]">
-            <span>C-001</span>
-            <span>{text.home.caption}</span>
           </div>
-        </div>
-      </section>
+        </section>
+
+        <section aria-labelledby="statement-title" className="lavie-manifesto">
+          <div>
+            <h2 id="statement-title">{copy.statement}</h2>
+            <p>{copy.statementBody}</p>
+          </div>
+        </section>
+
+        <section aria-labelledby="contact-title" className="lavie-contact">
+          <h2 id="contact-title">{copy.contact}</h2>
+          <a href="mailto:casparjang@outlook.com">casparjang@outlook.com ↗</a>
+        </section>
+      </div>
     </PageFrame>
   );
 }

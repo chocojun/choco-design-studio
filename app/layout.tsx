@@ -4,8 +4,8 @@ import { SiteShell } from "@/components/site-shell";
 import { LanguageProvider } from "@/components/language-provider";
 
 export const metadata: Metadata = {
-  title: "Choco Design Studio",
-  description: "Let’s have a tea for two. A personal portfolio and interactive tea studio.",
+  title: "Lavie",
+  description: "We feel, then we create. A personal visual archive and interactive studio.",
 };
 
 export default function RootLayout({
@@ -14,7 +14,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html data-scroll-behavior="smooth" lang="en">
       <body>
         <LanguageProvider>
           <SiteShell>{children}</SiteShell>

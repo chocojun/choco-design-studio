@@ -1,0 +1,305 @@
+.scope {
+  isolation: isolate;
+  position: relative;
+}
+
+.scope :global(.mobius-field) {
+  height: calc(100svh - var(--header-height));
+  left: 0;
+  pointer-events: none;
+  position: fixed;
+  top: var(--header-height);
+  width: 100%;
+  z-index: 2;
+}
+
+.scope :global(.lavie-hero),
+.scope :global(.lavie-work),
+.scope :global(.lavie-manifesto),
+.scope :global(.lavie-contact) {
+  position: relative;
+  z-index: 3;
+}
+
+.scope :global(.lavie-hero) {
+  display: grid;
+  place-items: center;
+  min-height: calc(100svh - var(--header-height));
+  padding: 34px 0 72px;
+}
+
+.scope :global(.lavie-logo-lockup) {
+  align-self: center;
+  justify-self: center;
+  position: relative;
+  width: min(72vw, 860px);
+  z-index: 2;
+}
+
+.scope :global(.lavie-logo-lockup img) {
+  animation: lavie-logo-arrival 1250ms cubic-bezier(0.22, 1, 0.36, 1) 120ms both;
+  display: block;
+  height: auto;
+  mix-blend-mode: multiply;
+  opacity: 0;
+  transform: translateZ(0);
+  width: 100%;
+}
+
+@keyframes lavie-logo-arrival {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.scope :global(.lavie-hero-caption) {
+  align-items: end;
+  display: flex;
+  justify-content: space-between;
+}
+
+.scope :global(.lavie-hero-caption p) {
+  font-family: var(--fb-font-sans);
+  font-size: var(--fb-dynamic-lead);
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 0;
+  max-width: 390px;
+}
+
+.scope :global(.lavie-hero-caption a),
+.scope :global(.lavie-work-all) {
+  color: var(--foreground);
+  font-size: var(--fb-static-label);
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.scope :global(.lavie-hero-caption a::after),
+.scope :global(.lavie-work-all::after) {
+  background: currentColor;
+  content: "";
+  display: block;
+  height: 1px;
+  margin-top: 6px;
+  transform-origin: right;
+  transition: transform 350ms ease;
+  width: 100%;
+}
+
+.scope :global(.lavie-hero-caption a:hover::after),
+.scope :global(.lavie-hero-caption a:focus-visible::after),
+.scope :global(.lavie-work-all:hover::after),
+.scope :global(.lavie-work-all:focus-visible::after) {
+  transform: scaleX(0.38);
+}
+
+.scope :global(.lavie-work) {
+  background: rgba(255, 255, 255, 0.98);
+  margin-left: calc(var(--page-gutter) * -1);
+  margin-right: calc(var(--page-gutter) * -1);
+  padding: 170px var(--page-gutter) 190px;
+}
+
+.scope :global(.lavie-section-heading) {
+  margin-bottom: 120px;
+}
+
+.scope :global(.lavie-section-heading h2) {
+  font-family: var(--fb-font-display);
+  font-size: var(--fb-dynamic-h1);
+  font-weight: 400;
+  line-height: 0.92;
+  margin: 0;
+}
+
+.scope :global(.lavie-work-index) {
+  border-top: 1px solid var(--foreground);
+}
+
+.scope :global(.lavie-work-row) {
+  align-items: baseline;
+  color: var(--foreground);
+  display: block;
+  overflow: hidden;
+  padding: 32px 0 38px;
+  position: relative;
+  text-decoration: none;
+}
+
+.scope :global(.lavie-work-row::after) {
+  background: linear-gradient(90deg, rgba(13, 13, 13, 0.02), rgba(255, 255, 255, 0.75), rgba(13, 13, 13, 0.04));
+  content: "";
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-104%);
+  transition: opacity 250ms ease, transform 800ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scope :global(.lavie-work-row + .lavie-work-row) {
+  border-top: 1px solid var(--line);
+}
+
+.scope :global(.lavie-work-row h3) {
+  font-family: var(--fb-font-display);
+  font-size: var(--fb-dynamic-h2);
+  font-weight: 400;
+  line-height: 0.94;
+  margin: 0;
+}
+
+.scope :global(.lavie-work-row:hover::after),
+.scope :global(.lavie-work-row:focus-visible::after) {
+  opacity: 0.45;
+  transform: translateX(104%);
+}
+
+.scope :global(.lavie-work-all) {
+  display: block;
+  margin: 74px 0 0 auto;
+  width: fit-content;
+}
+
+.scope :global(.lavie-manifesto) {
+  align-items: center;
+  background: #000000;
+  color: #ffffff;
+  display: grid;
+  margin-left: calc(var(--page-gutter) * -1);
+  margin-right: calc(var(--page-gutter) * -1);
+  min-height: 100svh;
+  padding: 150px var(--page-gutter);
+}
+
+.scope :global(.lavie-manifesto > div) {
+  display: grid;
+  gap: 70px;
+}
+
+.scope :global(.lavie-manifesto h2) {
+  font-family: var(--fb-font-display);
+  font-size: var(--fb-dynamic-display);
+  font-weight: 400;
+  line-height: 0.91;
+  margin: 0;
+  max-width: 1160px;
+}
+
+.scope :global(.lavie-manifesto p) {
+  color: rgba(255, 255, 255, 0.68);
+  font-size: var(--fb-dynamic-body);
+  line-height: 1.5;
+  margin: 0 0 0 auto;
+  max-width: 390px;
+}
+
+.scope :global(.lavie-contact) {
+  align-items: end;
+  background: #ffffff;
+  display: grid;
+  gap: 80px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  margin-left: calc(var(--page-gutter) * -1);
+  margin-right: calc(var(--page-gutter) * -1);
+  min-height: 82svh;
+  padding: 150px var(--page-gutter) 44px;
+}
+
+.scope :global(.lavie-contact h2) {
+  font-family: var(--fb-font-display);
+  font-size: var(--fb-dynamic-h1);
+  font-weight: 400;
+  line-height: 0.94;
+  margin: 0;
+  max-width: 880px;
+}
+
+.scope :global(.lavie-contact a) {
+  color: var(--foreground);
+  font-size: var(--fb-static-title);
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 767px) {
+  .scope :global(.mobius-field) {
+    height: 72svh;
+    top: 16svh;
+  }
+
+  .scope :global(.lavie-hero) {
+    padding-bottom: 94px;
+  }
+
+  .scope :global(.lavie-logo-lockup) {
+    width: 88vw;
+  }
+
+  .scope :global(.lavie-hero-caption) {
+    align-items: start;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .scope :global(.lavie-hero-caption p) {
+    max-width: 275px;
+  }
+
+  .scope :global(.lavie-hero-caption a) {
+    align-self: flex-end;
+  }
+
+  .scope :global(.lavie-work) {
+    padding-bottom: 120px;
+    padding-top: 110px;
+  }
+
+  .scope :global(.lavie-section-heading) {
+    margin-bottom: 72px;
+  }
+
+  .scope :global(.lavie-work-row) {
+    padding: 24px 0 28px;
+  }
+
+  .scope :global(.lavie-work-all) {
+    margin-top: 54px;
+  }
+
+  .scope :global(.lavie-manifesto) {
+    min-height: 90svh;
+    padding-bottom: 110px;
+    padding-top: 110px;
+  }
+
+  .scope :global(.lavie-manifesto > div) {
+    gap: 56px;
+  }
+
+  .scope :global(.lavie-contact) {
+    align-items: start;
+    gap: 90px;
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 72svh;
+    padding-bottom: 40px;
+    padding-top: 110px;
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scope :global(.lavie-logo-lockup img) {
+    animation: none;
+    opacity: 1;
+  }
+
+  .scope :global(.lavie-hero-caption a::after),
+  .scope :global(.lavie-work-all::after) {
+    transition: none;
+  }
+}

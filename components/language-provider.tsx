@@ -35,7 +35,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     let stored: Locale | null = null;
     try {
-      stored = window.localStorage.getItem("choco-locale") as Locale | null;
+      stored = window.localStorage.getItem("lavie-locale") as Locale | null;
     } catch {
       stored = null;
     }
@@ -46,7 +46,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
   const setLocale = (nextLocale: Locale) => {
     try {
-      window.localStorage.setItem("choco-locale", nextLocale);
+      window.localStorage.setItem("lavie-locale", nextLocale);
     } catch {
       // Language switching should still work when storage is unavailable.
     }

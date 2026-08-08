@@ -8,16 +8,16 @@ export const locales: { code: Locale; label: string }[] = [
 
 export const copy = {
   "zh-CN": {
-    nav: { index: "首页", work: "作品", ai: "奶茶", about: "关于", contact: "联系" },
-    shell: { portfolio: "静态作品集", ai: "Tea studio" },
+    nav: { index: "首页", work: "作品", ai: "出杯实验", about: "关于", contact: "联系" },
+    shell: { portfolio: "视觉档案", ai: "3D 出杯实验" },
     home: {
-      eyebrow: "Choco Design Studio / 个人档案",
-      title: "Let’s have a tea for two. 一个漂浮的个人档案：设计、图像、fashion-tech，和不稳定的内在天气。",
-      body: "一个静态 demo 表面：稀疏说明、图像场、自我记录。有时是作品集，有时是房间，有时是一场伪装成档案的轻微爆炸。",
+      eyebrow: "Lavie / 个人视觉档案",
+      title: "We feel, then we create.",
+      body: "先感受，再创作。这里是作品集、灵感森林，也是一个小型电子艺术展。",
       current: "当前选择",
       work: "查看作品",
       prototype: "原型",
-      ai: "奶茶实验室",
+      ai: "3D 出杯实验",
       contact: "联系",
       email: "Email / links",
       featuredAlt: "Tea for Two, Before Thunder 剪贴画作品",
@@ -26,7 +26,7 @@ export const copy = {
     work: {
       eyebrow: "剪贴画档案",
       intro:
-        "二十件自制剪贴画被安装进 Choco Design Studio。每张图像以档案卡片方式陈列，保留剪贴、错位、拼接与私人视觉研究的质感。",
+        "二十件自制剪贴画被安装进 Lavie。每张图像以档案卡片方式陈列，保留剪贴、错位、拼接与私人视觉研究的质感。",
       still: "点击放大查看",
       moving: "动态视图已打开",
       playGif: "查看作品",
@@ -37,7 +37,7 @@ export const copy = {
     ai: {
       eyebrow: "Tea studio / 互动",
       title: "做一杯适合今天精神状态的奶茶。",
-      body: "选择茶底、奶感、糖、冰和配料，生成一杯 Choco Design Studio 的小票奶茶。",
+      body: "选择茶底、奶感、糖、冰和配料，生成一杯 Lavie 的小票奶茶。",
       upload: "今日备注",
       uploadBody: "这个版本是本地静态交互，不上传、不保存、不连接后台。",
       choose: "选择配方",
@@ -106,16 +106,16 @@ export const copy = {
     },
   },
   "zh-TW": {
-    nav: { index: "首頁", work: "作品", ai: "奶茶", about: "關於", contact: "聯絡" },
-    shell: { portfolio: "靜態作品集", ai: "Tea studio" },
+    nav: { index: "首頁", work: "作品", ai: "出杯實驗", about: "關於", contact: "聯絡" },
+    shell: { portfolio: "視覺檔案", ai: "3D 出杯實驗" },
     home: {
-      eyebrow: "Choco Design Studio / 個人檔案",
-      title: "Let’s have a tea for two. 一個漂浮的個人檔案：設計、圖像、fashion-tech，和不穩定的內在天氣。",
-      body: "一個靜態 demo 表面：稀疏說明、圖像場、自我記錄。有時是作品集，有時是房間，有時是一場偽裝成檔案的輕微爆炸。",
+      eyebrow: "Lavie / 個人視覺檔案",
+      title: "We feel, then we create.",
+      body: "先感受，再創作。這裡是作品集、靈感森林，也是一個小型電子藝術展。",
       current: "當前選擇",
       work: "查看作品",
       prototype: "原型",
-      ai: "奶茶實驗室",
+      ai: "3D 出杯實驗",
       contact: "聯絡",
       email: "Email / links",
       featuredAlt: "Tea for Two, Before Thunder 剪貼畫作品",
@@ -124,7 +124,7 @@ export const copy = {
     work: {
       eyebrow: "剪貼畫檔案",
       intro:
-        "二十件自製剪貼畫被安裝進 Choco Design Studio。每張圖像以檔案卡片方式陳列，保留剪貼、錯位、拼接與私人視覺研究的質感。",
+        "二十件自製剪貼畫被安裝進 Lavie。每張圖像以檔案卡片方式陳列，保留剪貼、錯位、拼接與私人視覺研究的質感。",
       still: "點擊放大查看",
       moving: "動態視圖已打開",
       playGif: "查看作品",
@@ -135,7 +135,7 @@ export const copy = {
     ai: {
       eyebrow: "Tea studio / 互動",
       title: "做一杯適合今天精神狀態的奶茶。",
-      body: "選擇茶底、奶感、糖、冰和配料，生成一杯 Choco Design Studio 的小票奶茶。",
+      body: "選擇茶底、奶感、糖、冰和配料，生成一杯 Lavie 的小票奶茶。",
       upload: "今日備註",
       uploadBody: "這個版本是本地靜態互動，不上傳、不儲存、不連接後台。",
       choose: "選擇配方",
@@ -204,12 +204,12 @@ export const copy = {
     },
   },
   en: {
-    nav: { index: "Index", work: "Work", ai: "Tea", about: "About", contact: "Contact" },
-    shell: { portfolio: "Static portfolio", ai: "Tea studio" },
+    nav: { index: "Index", work: "Work", ai: "Drink lab", about: "About", contact: "Contact" },
+    shell: { portfolio: "Visual archive", ai: "3D drink lab" },
     home: {
-      eyebrow: "Choco Design Studio / personal archive",
-      title: "Let’s have a tea for two. A floating personal archive for design, images, fashion-tech, and unstable inner weather.",
-      body: "A static demo surface with sparse captions, image fields, and self-documentation. Sometimes a portfolio, sometimes a room, sometimes a soft explosion disguised as an archive.",
+      eyebrow: "Lavie / personal visual archive",
+      title: "We feel, then we create.",
+      body: "A quiet surface for portfolio work, inspiration forests, electronic art-show fragments, and visual experiments.",
       current: "Current selection",
       work: "View work",
       prototype: "Prototype",
@@ -222,7 +222,7 @@ export const copy = {
     work: {
       eyebrow: "Clipping archive",
       intro:
-        "Twenty self-made clipping works are installed inside Choco Design Studio. Each image is presented as an archive card, preserving the texture of cutting, misalignment, collage, and private visual research.",
+        "Twenty self-made clipping works are installed inside Lavie. Each image is presented as an archive card, preserving the texture of cutting, misalignment, collage, and private visual research.",
       still: "click to enlarge",
       moving: "motion view opened",
       playGif: "View work",
@@ -233,7 +233,7 @@ export const copy = {
     ai: {
       eyebrow: "Tea studio / interactive",
       title: "Build a milk tea for today's mental weather.",
-      body: "Choose tea base, milk body, sugar, ice, and toppings to generate a Choco Design Studio receipt drink.",
+      body: "Choose tea base, milk body, sugar, ice, and toppings to generate a Lavie receipt drink.",
       upload: "Today's note",
       uploadBody: "This is a local static interaction. No upload, no storage, no backend.",
       choose: "Choose recipe",
