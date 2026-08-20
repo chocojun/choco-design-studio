@@ -20,6 +20,7 @@ import {
 import { ChangeEvent, CSSProperties, PointerEvent as ReactPointerEvent, useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/components/language-provider";
 import type { Locale } from "@/lib/i18n";
+import { withBasePath } from "@/lib/site-path";
 
 type Track = {
   id: string;
@@ -67,7 +68,7 @@ const defaultTracks: Track[] = originalTracks.map(([title, durationSeconds], ind
     title,
     durationSeconds,
     detail: `LAVIE original · Study ${String(index + 1).padStart(2, "0")}`,
-    src: `/audio/concepts/${String(index + 1).padStart(2, "0")}-${slug}.mp3`,
+    src: withBasePath(`/audio/concepts/${String(index + 1).padStart(2, "0")}-${slug}.mp3`),
   };
 });
 
@@ -460,7 +461,7 @@ export function MusicPlayer() {
 
       <div className="sound-dock">
         <button aria-label={isPlaying ? text.pause : text.play} className="sound-cover" onClick={togglePlayback} type="button">
-          <img alt="" height="76" src={currentTrack?.artwork ?? "/clippings/03-blue-threshold.jpg"} width="76" />
+          <img alt="" height="76" src={currentTrack?.artwork ?? withBasePath("/clippings/03-blue-threshold.jpg")} width="76" />
           <span aria-hidden="true" className={isPlaying ? "is-playing" : ""} />
         </button>
 

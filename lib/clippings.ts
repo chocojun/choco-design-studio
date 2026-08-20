@@ -1,4 +1,5 @@
 import type { Locale } from "@/lib/i18n";
+import { withBasePath } from "@/lib/site-path";
 
 export type Localized = Record<Locale, string>;
 
@@ -21,7 +22,7 @@ const l = (en: string, zhCN: string, zhTW: string): Localized => ({
 
 const medium = l("digital clipping / image collage", "数字剪贴 / 图像拼贴", "數位剪貼 / 圖像拼貼");
 
-export const clippings: Clipping[] = [
+const clippingData: Clipping[] = [
   {
     id: "C-001",
     title: l("Tea for Two, Before Thunder", "雷声前的双人茶", "雷聲前的雙人茶"),
@@ -303,3 +304,9 @@ export const clippings: Clipping[] = [
     ),
   },
 ];
+
+export const clippings = clippingData.map((clipping) => ({
+  ...clipping,
+  src: withBasePath(clipping.src),
+  gifSrc: withBasePath(clipping.gifSrc),
+}));

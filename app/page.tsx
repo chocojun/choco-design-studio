@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useLanguage } from "@/components/language-provider";
 import { PageFrame } from "@/components/site-shell";
 import type { Locale } from "@/lib/i18n";
+import { withBasePath } from "@/lib/site-path";
 import styles from "./home.module.css";
 
 const MobiusField = dynamic(
@@ -56,7 +57,7 @@ export default function Home() {
               height={573}
               priority
               sizes="(max-width: 767px) 84vw, 62vw"
-              src="/assets/lavie-handwritten-logo.png"
+              src={withBasePath("/assets/lavie-handwritten-logo.png")}
               width={1212}
             />
           </div>

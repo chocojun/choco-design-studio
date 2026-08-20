@@ -10,6 +10,7 @@ import { LanguageSwitcher } from "@/components/language-switcher";
 import { FluidPageEffects } from "@/components/fluid-page-effects";
 import { useLanguage } from "@/components/language-provider";
 import { MusicPlayer } from "@/components/music-player";
+import { withBasePath } from "@/lib/site-path";
 
 export function SiteShell({ children }: { children: ReactNode }) {
   const { text } = useLanguage();
@@ -38,7 +39,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
       <header className="site-header">
         <div className="site-header-inner">
           <Link href="/" className="brand-mark" onClick={() => setIsMenuOpen(false)}>
-            <Image alt="Lavie" height={573} priority src="/assets/lavie-handwritten-logo.png" width={1212} />
+            <Image alt="Lavie" height={573} priority src={withBasePath("/assets/lavie-handwritten-logo.png")} width={1212} />
           </Link>
 
           <nav aria-label="Primary navigation" className="desktop-nav">
