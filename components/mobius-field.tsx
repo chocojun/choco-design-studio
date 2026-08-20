@@ -74,31 +74,6 @@ export function MobiusField() {
     topologyThread.rotation.set(0.55, -0.12, 0.08);
     scene.add(topologyThread);
 
-    const shadowCanvas = document.createElement("canvas");
-    shadowCanvas.width = 256;
-    shadowCanvas.height = 128;
-    const shadowContext = shadowCanvas.getContext("2d");
-    if (shadowContext) {
-      const gradient = shadowContext.createRadialGradient(128, 64, 5, 128, 64, 118);
-      gradient.addColorStop(0, "rgba(12, 12, 12, 0.42)");
-      gradient.addColorStop(0.48, "rgba(12, 12, 12, 0.16)");
-      gradient.addColorStop(1, "rgba(12, 12, 12, 0)");
-      shadowContext.fillStyle = gradient;
-      shadowContext.fillRect(0, 0, 256, 128);
-    }
-    const shadowTexture = new THREE.CanvasTexture(shadowCanvas);
-    const shadowMaterial = new THREE.SpriteMaterial({
-      color: 0x373737,
-      depthWrite: false,
-      map: shadowTexture,
-      opacity: 0.36,
-      transparent: true,
-    });
-    const contactShadow = new THREE.Sprite(shadowMaterial);
-    contactShadow.position.set(0.2, -0.8, -1.1);
-    contactShadow.scale.set(6.9, 2.3, 1);
-    scene.add(contactShadow);
-
     const key = new THREE.SpotLight(0xffffff, 92, 24, Math.PI / 4.5, 0.72, 1.4);
     key.position.set(-2.8, 4.6, 7.2);
     scene.add(key, key.target);
@@ -129,14 +104,14 @@ export function MobiusField() {
       camera.updateProjectionMatrix();
       compact = clientWidth < 720;
       if (compact) {
-        ring.scale.set(1.04, 0.62, 0.72);
-        topologyThread.scale.set(1.18, 0.52, 0.62);
+        ring.scale.set(1.28, 1.05, 0.82);
+        topologyThread.scale.set(1.36, 0.9, 0.72);
       } else if (clientWidth < 1100) {
-        ring.scale.set(1.34, 0.66, 0.82);
-        topologyThread.scale.set(1.48, 0.54, 0.68);
+        ring.scale.set(1.78, 1.18, 0.98);
+        topologyThread.scale.set(1.88, 0.96, 0.8);
       } else {
-        ring.scale.set(1.62, 0.69, 0.9);
-        topologyThread.scale.set(1.74, 0.56, 0.72);
+        ring.scale.set(2.18, 1.28, 1.05);
+        topologyThread.scale.set(2.26, 1.02, 0.86);
       }
     };
 
@@ -202,8 +177,6 @@ export function MobiusField() {
       material.dispose();
       knotGeometry.dispose();
       knotMaterial.dispose();
-      shadowTexture.dispose();
-      shadowMaterial.dispose();
       environment.dispose();
       environmentMap.dispose();
       pmrem.dispose();

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Landmark } from "lucide-react";
+import { Layers } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { LanguageSwitcher } from "@/components/language-switcher";
@@ -15,7 +15,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
   const { text } = useLanguage();
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isMuseumMode, setIsMuseumMode] = useState(false);
+  const [isGlassMode, setIsGlassMode] = useState(true);
   const navItems = [
     { href: "/", label: text.nav.index },
     { href: "/work", label: text.nav.work },
@@ -24,17 +24,17 @@ export function SiteShell({ children }: { children: ReactNode }) {
   ];
 
   useEffect(() => {
-    const savedMode = window.localStorage.getItem("lavie-surface-mode");
-    if (savedMode === "museum") setIsMuseumMode(true);
+    const savedMode = window.localStorage.getItem("lavie-surface-v2");
+    if (savedMode === "studio") setIsGlassMode(false);
   }, []);
 
   useEffect(() => {
-    document.documentElement.dataset.surface = isMuseumMode ? "museum" : "studio";
-    window.localStorage.setItem("lavie-surface-mode", isMuseumMode ? "museum" : "studio");
-  }, [isMuseumMode]);
+    document.documentElement.dataset.surface = isGlassMode ? "glass" : "studio";
+    window.localStorage.setItem("lavie-surface-v2", isGlassMode ? "glass" : "studio");
+  }, [isGlassMode]);
 
   return (
-    <div className={`site-shell min-h-screen text-[var(--foreground)] ${isMuseumMode ? "is-museum-mode" : ""}`}>
+    <div className={`site-shell min-h-screen text-[var(--foreground)] ${isGlassMode ? "is-glass-mode" : ""}`}>
       <header className="site-header">
         <div className="site-header-inner">
           <Link href="/" className="brand-mark" onClick={() => setIsMenuOpen(false)}>
@@ -55,14 +55,14 @@ export function SiteShell({ children }: { children: ReactNode }) {
 
           <div className="site-tools">
             <button
-              aria-label={isMuseumMode ? "切换回纯白展厅" : "切换为博物馆展墙"}
-              aria-pressed={isMuseumMode}
+              aria-label={isGlassMode ? "切换为纯白背景" : "切换为玻璃渐变背景"}
+              aria-pressed={isGlassMode}
               className="surface-mode-toggle"
-              onClick={() => setIsMuseumMode((value) => !value)}
-              title={isMuseumMode ? "纯白展厅" : "博物馆展墙"}
+              onClick={() => setIsGlassMode((value) => !value)}
+              title={isGlassMode ? "纯白背景" : "玻璃渐变"}
               type="button"
             >
-              <Landmark aria-hidden="true" size={16} strokeWidth={1.7} />
+              <Layers aria-hidden="true" size={16} strokeWidth={1.7} />
             </button>
             <LanguageSwitcher />
             <button

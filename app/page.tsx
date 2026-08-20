@@ -13,25 +13,25 @@ const MobiusField = dynamic(
 );
 
 type HomeCopy = {
-  statement: string;
+  statement: [string, string];
   statementBody: string;
   contact: string;
 };
 
 const homeCopy: Record<Locale, HomeCopy> = {
   en: {
-    statement: "Perception, creation, everything beautiful.",
+    statement: ["Perception. Creation.", "Everything beautiful."],
     statementBody:
       "Lavie moves between fashion, objects, visual identity and digital culture.",
     contact: "Let’s make something that moves.",
   },
   "zh-CN": {
-    statement: "感知，创造，关于美的一切。",
+    statement: ["感知，创造，", "关于美的一切。"],
     statementBody: "Lavie 游走于时装、物件、视觉身份与数字文化之间。",
     contact: "一起做点会流动的东西。",
   },
   "zh-TW": {
-    statement: "感知，創造，關於美的一切。",
+    statement: ["感知，創造，", "關於美的一切。"],
     statementBody: "Lavie 遊走於時裝、物件、視覺身份與數位文化之間。",
     contact: "一起做點會流動的東西。",
   },
@@ -64,7 +64,9 @@ export default function Home() {
 
         <section aria-labelledby="statement-title" className="lavie-manifesto">
           <div>
-            <h2 data-static-heading="true" id="statement-title">{copy.statement}</h2>
+            <h2 data-static-heading="true" id="statement-title">
+              {copy.statement.map((line) => <span key={line}>{line}</span>)}
+            </h2>
             <p>{copy.statementBody}</p>
           </div>
         </section>

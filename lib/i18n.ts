@@ -96,7 +96,7 @@ export const copy = {
     },
     contact: {
       eyebrow: "联系",
-      title: "关于委托、合作、图像询问。",
+      title: "联系信息",
       email: "Email",
       instagram: "Instagram",
       arena: "Are.na",
@@ -194,7 +194,7 @@ export const copy = {
     },
     contact: {
       eyebrow: "聯絡",
-      title: "關於委託、合作、圖像詢問。",
+      title: "聯絡資訊",
       email: "Email",
       instagram: "Instagram",
       arena: "Are.na",
@@ -292,7 +292,7 @@ export const copy = {
     },
     contact: {
       eyebrow: "Contact",
-      title: "For commissions, collaborations, and image inquiries.",
+      title: "Contact information",
       email: "Email",
       instagram: "Instagram",
       arena: "Are.na",
