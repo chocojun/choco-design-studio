@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { Landmark } from "lucide-react";
+import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { FluidPageEffects } from "@/components/fluid-page-effects";
@@ -13,6 +15,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
   const { text } = useLanguage();
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMuseumMode, setIsMuseumMode] = useState(false);
   const navItems = [
     { href: "/", label: text.nav.index },
     { href: "/work", label: text.nav.work },
@@ -20,12 +23,22 @@ export function SiteShell({ children }: { children: ReactNode }) {
     { href: "/contact", label: text.nav.contact },
   ];
 
+  useEffect(() => {
+    const savedMode = window.localStorage.getItem("lavie-surface-mode");
+    if (savedMode === "museum") setIsMuseumMode(true);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.dataset.surface = isMuseumMode ? "museum" : "studio";
+    window.localStorage.setItem("lavie-surface-mode", isMuseumMode ? "museum" : "studio");
+  }, [isMuseumMode]);
+
   return (
-    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
+    <div className={`site-shell min-h-screen text-[var(--foreground)] ${isMuseumMode ? "is-museum-mode" : ""}`}>
       <header className="site-header">
         <div className="site-header-inner">
           <Link href="/" className="brand-mark" onClick={() => setIsMenuOpen(false)}>
-            <span>Lavie</span>
+            <Image alt="Lavie" height={573} priority src="/assets/lavie-handwritten-logo.png" width={1212} />
           </Link>
 
           <nav aria-label="Primary navigation" className="desktop-nav">
@@ -41,6 +54,16 @@ export function SiteShell({ children }: { children: ReactNode }) {
           </nav>
 
           <div className="site-tools">
+            <button
+              aria-label={isMuseumMode ? "切换回纯白展厅" : "切换为博物馆展墙"}
+              aria-pressed={isMuseumMode}
+              className="surface-mode-toggle"
+              onClick={() => setIsMuseumMode((value) => !value)}
+              title={isMuseumMode ? "纯白展厅" : "博物馆展墙"}
+              type="button"
+            >
+              <Landmark aria-hidden="true" size={16} strokeWidth={1.7} />
+            </button>
             <LanguageSwitcher />
             <button
               aria-controls="mobile-menu"

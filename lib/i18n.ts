@@ -26,7 +26,7 @@ export const copy = {
     work: {
       eyebrow: "剪贴画档案",
       intro:
-        "二十件自制剪贴画被安装进 Lavie。每张图像以档案卡片方式陈列，保留剪贴、错位、拼接与私人视觉研究的质感。",
+        "二十件自制剪贴画被安装进 Lavie。每次只看一件作品，保留剪贴、错位、拼接与私人视觉研究的质感。",
       still: "点击放大查看",
       moving: "动态视图已打开",
       playGif: "查看作品",
@@ -124,7 +124,7 @@ export const copy = {
     work: {
       eyebrow: "剪貼畫檔案",
       intro:
-        "二十件自製剪貼畫被安裝進 Lavie。每張圖像以檔案卡片方式陳列，保留剪貼、錯位、拼接與私人視覺研究的質感。",
+        "二十件自製剪貼畫被安裝進 Lavie。每次只看一件作品，保留剪貼、錯位、拼接與私人視覺研究的質感。",
       still: "點擊放大查看",
       moving: "動態視圖已打開",
       playGif: "查看作品",
@@ -222,7 +222,7 @@ export const copy = {
     work: {
       eyebrow: "Clipping archive",
       intro:
-        "Twenty self-made clipping works are installed inside Lavie. Each image is presented as an archive card, preserving the texture of cutting, misalignment, collage, and private visual research.",
+        "Twenty self-made clipping works are installed inside Lavie. One work occupies the page at a time, preserving the texture of cutting, misalignment, collage, and private visual research.",
       still: "click to enlarge",
       moving: "motion view opened",
       playGif: "View work",

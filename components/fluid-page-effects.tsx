@@ -9,7 +9,9 @@ export function FluidPageEffects() {
 
   useEffect(() => {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const candidates = Array.from(document.querySelectorAll<HTMLElement>("main h1:not(.sr-only), main h2, main h3"));
+    const candidates = Array.from(document.querySelectorAll<HTMLElement>(
+      "main h1:not(.sr-only):not([data-static-heading]), main h2:not([data-static-heading]), main h3:not([data-static-heading])",
+    ));
     const headings = candidates.filter((heading) => Number.parseFloat(getComputedStyle(heading).fontSize) >= 30);
 
     headings.forEach((heading, index) => {

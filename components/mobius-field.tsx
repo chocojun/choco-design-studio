@@ -14,7 +14,7 @@ export function MobiusField() {
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
-    camera.position.set(0, 0.2, 8.5);
+    camera.position.set(0, 0.16, 8.8);
 
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
@@ -59,6 +59,20 @@ export function MobiusField() {
     const ring = new THREE.Mesh(geometry, material);
     ring.rotation.set(-0.52, 0.2, -0.08);
     scene.add(ring);
+
+    const knotGeometry = new THREE.TorusKnotGeometry(1.55, 0.022, 280, 10, 2, 3);
+    const knotMaterial = new THREE.MeshPhysicalMaterial({
+      color: 0x454545,
+      envMapIntensity: 2.1,
+      metalness: 1,
+      opacity: 0.3,
+      roughness: 0.12,
+      transparent: true,
+    });
+    const topologyThread = new THREE.Mesh(knotGeometry, knotMaterial);
+    topologyThread.position.set(0, 0.08, -1.28);
+    topologyThread.rotation.set(0.55, -0.12, 0.08);
+    scene.add(topologyThread);
 
     const shadowCanvas = document.createElement("canvas");
     shadowCanvas.width = 256;
@@ -114,7 +128,16 @@ export function MobiusField() {
       camera.aspect = clientWidth / Math.max(clientHeight, 1);
       camera.updateProjectionMatrix();
       compact = clientWidth < 720;
-      ring.scale.setScalar(compact ? 0.72 : clientWidth < 1100 ? 0.9 : 1.1);
+      if (compact) {
+        ring.scale.set(1.04, 0.62, 0.72);
+        topologyThread.scale.set(1.18, 0.52, 0.62);
+      } else if (clientWidth < 1100) {
+        ring.scale.set(1.34, 0.66, 0.82);
+        topologyThread.scale.set(1.48, 0.54, 0.68);
+      } else {
+        ring.scale.set(1.62, 0.69, 0.9);
+        topologyThread.scale.set(1.74, 0.56, 0.72);
+      }
     };
 
     const updateScroll = () => {
@@ -138,6 +161,9 @@ export function MobiusField() {
       ring.rotation.x = -0.52 + Math.sin(idle * 1.7) * 0.13 + scrollProgress * 0.35 - pointer.y * 0.05;
       ring.rotation.z = -0.08 + Math.sin(scrollProgress * Math.PI * 2) * 0.24;
       ring.position.y = Math.sin(scrollProgress * Math.PI * 3) * 0.35;
+      topologyThread.rotation.y = -idle * 0.72 - scrollProgress * Math.PI * 1.45;
+      topologyThread.rotation.z = 0.08 + Math.sin(elapsed * 0.12) * 0.08;
+      topologyThread.position.y = 0.08 - Math.sin(scrollProgress * Math.PI * 2) * 0.18;
       rim.position.x = -4.5 + pointer.x * 2.2;
       rim.position.y = 3.8 + pointer.y * 1.5;
 
@@ -174,6 +200,8 @@ export function MobiusField() {
       window.removeEventListener("pointermove", updatePointer);
       geometry.dispose();
       material.dispose();
+      knotGeometry.dispose();
+      knotMaterial.dispose();
       shadowTexture.dispose();
       shadowMaterial.dispose();
       environment.dispose();

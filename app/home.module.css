@@ -4,11 +4,12 @@
 }
 
 .scope :global(.mobius-field) {
-  height: calc(100svh - var(--header-height));
+  height: min(64svh, 42.55vw);
   left: 0;
   pointer-events: none;
   position: fixed;
-  top: var(--header-height);
+  top: 52%;
+  transform: translateY(-50%);
   width: 100%;
   z-index: 2;
 }
@@ -228,8 +229,10 @@
 
 @media (max-width: 767px) {
   .scope :global(.mobius-field) {
-    height: 72svh;
-    top: 16svh;
+    height: 54svh;
+    left: -12vw;
+    top: 50%;
+    width: 124vw;
   }
 
   .scope :global(.lavie-hero) {

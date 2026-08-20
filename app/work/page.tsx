@@ -10,11 +10,11 @@ export default function WorkPage() {
 
   return (
     <PageFrame>
-      <div className="mb-16 grid gap-8 md:grid-cols-[240px_1fr]">
+      <div className="work-intro">
         <div>
           <p className="fb-ui-label uppercase text-[var(--muted)]">{text.work.eyebrow}</p>
         </div>
-        <p className="fb-body-sm max-w-[520px] leading-relaxed">
+        <p>
           {text.work.intro}
         </p>
       </div>
