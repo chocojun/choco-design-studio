@@ -551,22 +551,17 @@ export function MusicPlayer() {
         || isEditing
       ) return;
 
-      switch (event.code || event.key) {
-        case "KeyF":
-        case "MediaPlayPause":
-          event.preventDefault();
-          mediaControlsRef.current.toggle();
-          break;
-        case "MediaTrackPrevious":
-          event.preventDefault();
-          mediaControlsRef.current.previous();
-          break;
-        case "MediaTrackNext":
-          event.preventDefault();
-          mediaControlsRef.current.next();
-          break;
-        default:
-          break;
+      const keys = new Set([event.code, event.key]);
+
+      if (keys.has("F7") || keys.has("MediaTrackPrevious")) {
+        event.preventDefault();
+        mediaControlsRef.current.previous();
+      } else if (keys.has("F8") || keys.has("MediaPlayPause")) {
+        event.preventDefault();
+        mediaControlsRef.current.toggle();
+      } else if (keys.has("F9") || keys.has("MediaTrackNext")) {
+        event.preventDefault();
+        mediaControlsRef.current.next();
       }
     };
 
