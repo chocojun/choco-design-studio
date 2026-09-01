@@ -206,27 +206,32 @@
 }
 
 .scope :global(.lavie-contact) {
-  align-items: end;
+  align-items: center;
   background: #ffffff;
   display: grid;
-  gap: 80px;
-  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 34px;
+  grid-template-columns: minmax(0, 1fr);
   margin-left: calc(var(--page-gutter) * -1);
   margin-right: calc(var(--page-gutter) * -1);
   min-height: 82svh;
-  padding: 150px var(--page-gutter) 44px;
+  padding: 96px var(--page-gutter) 42px;
 }
 
-.scope :global(.lavie-contact h2) {
+.scope :global(.lavie-contact-curve) {
+  display: block;
+  overflow: visible;
+  width: 100%;
+}
+
+.scope :global(.lavie-contact-curve text) {
+  fill: #000000;
   font-family: var(--fb-font-display);
-  font-size: var(--fb-dynamic-h1);
+  font-size: 112px;
   font-weight: 400;
-  line-height: 0.94;
-  margin: 0;
-  max-width: 880px;
 }
 
 .scope :global(.lavie-contact a) {
+  justify-self: end;
   color: var(--foreground);
   font-size: var(--fb-static-title);
   overflow-wrap: anywhere;
@@ -295,11 +300,20 @@
 
   .scope :global(.lavie-contact) {
     align-items: start;
-    gap: 90px;
+    gap: 48px;
     grid-template-columns: minmax(0, 1fr);
     min-height: 72svh;
     padding-bottom: 40px;
     padding-top: 110px;
+  }
+
+  .scope :global(.lavie-contact-curve) {
+    margin-inline: -7vw;
+    width: 112vw;
+  }
+
+  .scope :global(.lavie-contact-curve text) {
+    font-size: 88px;
   }
 
 }

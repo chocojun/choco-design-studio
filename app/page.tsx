@@ -24,17 +24,17 @@ const homeCopy: Record<Locale, HomeCopy> = {
     statement: ["Perception. Creation.", "Everything beautiful."],
     statementBody:
       "Lavie moves between fashion, objects, visual identity and digital culture.",
-    contact: "Let’s make something that moves.",
+    contact: "Let’s play it cool.",
   },
   "zh-CN": {
     statement: ["感知，创造，", "关于美的一切。"],
     statementBody: "Lavie 游走于时装、物件、视觉身份与数字文化之间。",
-    contact: "一起做点会流动的东西。",
+    contact: "Let’s play it cool.",
   },
   "zh-TW": {
     statement: ["感知，創造，", "關於美的一切。"],
     statementBody: "Lavie 遊走於時裝、物件、視覺身份與數位文化之間。",
-    contact: "一起做點會流動的東西。",
+    contact: "Let’s play it cool.",
   },
 };
 
@@ -73,7 +73,13 @@ export default function Home() {
         </section>
 
         <section aria-labelledby="contact-title" className="lavie-contact">
-          <h2 id="contact-title">{copy.contact}</h2>
+          <h2 className="sr-only" id="contact-title">{copy.contact}</h2>
+          <svg aria-hidden="true" className="lavie-contact-curve" viewBox="0 0 1200 380">
+            <path d="M 30 230 C 235 30, 430 25, 605 188 C 785 355, 980 340, 1170 92" fill="none" id="lavie-contact-path" />
+            <text>
+              <textPath href="#lavie-contact-path" startOffset="2%">Let’s play it cool.</textPath>
+            </text>
+          </svg>
           <a href="mailto:casparjang@outlook.com">casparjang@outlook.com ↗</a>
         </section>
       </div>

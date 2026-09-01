@@ -169,6 +169,7 @@ export function MusicPlayer() {
   const seekingRef = useRef(false);
   const autoplayPendingRef = useRef(true);
   const idleTimerRef = useRef<number | null>(null);
+  const crossfadeRef = useRef<{ audio: HTMLAudioElement; frame: number } | null>(null);
   const [tracks, setTracks] = useState<Track[]>([]);
   const [currentId, setCurrentId] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
@@ -239,6 +240,12 @@ export function MusicPlayer() {
     if (audioRef.current) audioRef.current.volume = volume;
   }, [volume]);
 
+  useEffect(() => () => {
+    if (!crossfadeRef.current) return;
+    window.cancelAnimationFrame(crossfadeRef.current.frame);
+    crossfadeRef.current.audio.pause();
+  }, []);
+
   useEffect(() => {
     if (!isPlaying || !audioRef.current) return;
     audioRef.current.play().catch(() => setIsPlaying(false));
@@ -302,11 +309,74 @@ export function MusicPlayer() {
     idleTimerRef.current = window.setTimeout(() => setIsDockIdle(true), 10_000);
   };
 
+  const cancelCrossfade = () => {
+    const activeFade = crossfadeRef.current;
+    if (!activeFade) return;
+    window.cancelAnimationFrame(activeFade.frame);
+    activeFade.audio.pause();
+    crossfadeRef.current = null;
+    if (audioRef.current) audioRef.current.volume = volume;
+  };
+
+  const transitionTo = async (nextIndex: number) => {
+    const nextTrack = tracks[nextIndex];
+    const outgoing = audioRef.current;
+    if (!nextTrack || nextTrack.id === currentId) return;
+
+    cancelCrossfade();
+    if (!outgoing || !isPlaying) {
+      setCurrentId(nextTrack.id);
+      return;
+    }
+
+    const incoming = new Audio(nextTrack.src);
+    incoming.preload = "auto";
+    incoming.volume = 0;
+
+    try {
+      await incoming.play();
+    } catch {
+      setCurrentId(nextTrack.id);
+      return;
+    }
+
+    const startedAt = performance.now();
+    const fadeDuration = 1400;
+    const animateFade = (now: number) => {
+      const progress = Math.min(1, (now - startedAt) / fadeDuration);
+      const eased = progress * progress * (3 - 2 * progress);
+      outgoing.volume = volume * (1 - eased);
+      incoming.volume = volume * eased;
+
+      if (progress < 1) {
+        const frame = window.requestAnimationFrame(animateFade);
+        crossfadeRef.current = { audio: incoming, frame };
+        return;
+      }
+
+      const handoffTime = incoming.currentTime;
+      outgoing.pause();
+      setCurrentId(nextTrack.id);
+      window.requestAnimationFrame(() => {
+        const activeAudio = audioRef.current;
+        if (!activeAudio) return;
+        activeAudio.currentTime = handoffTime;
+        activeAudio.volume = volume;
+        activeAudio.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
+        incoming.pause();
+        crossfadeRef.current = null;
+      });
+    };
+
+    const frame = window.requestAnimationFrame(animateFade);
+    crossfadeRef.current = { audio: incoming, frame };
+  };
+
   const goTo = (direction: number) => {
     if (!tracks.length) return;
     const baseIndex = currentIndex >= 0 ? currentIndex : 0;
     const nextIndex = (baseIndex + direction + tracks.length) % tracks.length;
-    setCurrentId(tracks[nextIndex].id);
+    void transitionTo(nextIndex);
   };
 
   const togglePlayback = async () => {
@@ -322,6 +392,7 @@ export function MusicPlayer() {
       }
     } else {
       autoplayPendingRef.current = false;
+      cancelCrossfade();
       audio.pause();
       setIsPlaying(false);
     }
@@ -438,7 +509,9 @@ export function MusicPlayer() {
         onDurationChange={(event) => setMediaDuration(event.currentTarget.duration || currentTrack?.durationSeconds || 0)}
         onLoadedMetadata={(event) => setMediaDuration(event.currentTarget.duration || currentTrack?.durationSeconds || 0)}
         onEnded={handleEnded}
-        onPause={() => setIsPlaying(false)}
+        onPause={() => {
+          if (!crossfadeRef.current) setIsPlaying(false);
+        }}
         onPlay={() => setIsPlaying(true)}
         onTimeUpdate={(event) => setCurrentTime(event.currentTarget.currentTime)}
         ref={audioRef}
@@ -470,7 +543,7 @@ export function MusicPlayer() {
         <div className="sound-playlist" role="list">
           {tracks.length ? tracks.map((track, index) => (
             <div className={`sound-track ${track.id === currentId ? "is-current" : ""}`} key={track.id} role="listitem">
-              <button className="sound-track-main" onClick={() => setCurrentId(track.id)} type="button">
+              <button className="sound-track-main" onClick={() => void transitionTo(index)} type="button">
                 <span>{String(index + 1).padStart(2, "0")}</span>
                 {track.artwork ? <img alt="" height="42" src={track.artwork} width="42" /> : <span className="sound-track-placeholder" />}
                 <span>
