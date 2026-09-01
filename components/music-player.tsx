@@ -63,6 +63,8 @@ const copy: Record<Locale, Record<string, string>> = {
     previous: "Previous track",
     next: "Next track",
     settings: "Playlist settings",
+    mute: "Mute",
+    unmute: "Restore volume",
     close: "Close settings",
     title: "Sound settings",
     subtitle: "Music selected by the site manager",
@@ -83,6 +85,8 @@ const copy: Record<Locale, Record<string, string>> = {
     previous: "上一首",
     next: "下一首",
     settings: "歌单设置",
+    mute: "静音",
+    unmute: "恢复音量",
     close: "关闭设置",
     title: "声音后台",
     subtitle: "由网站管理者决定的播放列表",
@@ -103,6 +107,8 @@ const copy: Record<Locale, Record<string, string>> = {
     previous: "上一首",
     next: "下一首",
     settings: "歌單設定",
+    mute: "靜音",
+    unmute: "恢復音量",
     close: "關閉設定",
     title: "聲音後台",
     subtitle: "由網站管理者決定的播放清單",
@@ -170,6 +176,7 @@ export function MusicPlayer() {
   const autoplayPendingRef = useRef(true);
   const idleTimerRef = useRef<number | null>(null);
   const crossfadeRef = useRef<{ audio: HTMLAudioElement; frame: number } | null>(null);
+  const previousVolumeRef = useRef(0.42);
   const mediaControlsRef = useRef({
     next: () => {},
     pause: () => {},
@@ -245,6 +252,7 @@ export function MusicPlayer() {
   }, [currentId, isReady, repeat, tracks, volume]);
 
   useEffect(() => {
+    if (volume > 0) previousVolumeRef.current = volume;
     if (audioRef.current) audioRef.current.volume = volume;
   }, [volume]);
 
@@ -758,14 +766,30 @@ export function MusicPlayer() {
         </label>
 
         <span className="sound-time">{formatTime(displayedTime)} / {formatTime(effectiveDuration)}</span>
-        <button
-          aria-label={volume === 0 ? text.volume : `${text.volume}: 0`}
-          className="sound-mute"
-          onClick={() => setVolume((value) => value === 0 ? 0.42 : 0)}
-          type="button"
-        >
-          {volume === 0 ? <VolumeX size={13} /> : <Volume2 size={13} />}
-        </button>
+        <div className="sound-volume">
+          <button
+            aria-label={volume === 0 ? text.unmute : text.mute}
+            className="sound-mute"
+            onClick={() => setVolume((value) => value === 0 ? previousVolumeRef.current : 0)}
+            type="button"
+          >
+            {volume === 0 ? <VolumeX size={13} /> : <Volume2 size={13} />}
+          </button>
+          <label>
+            <span className="sr-only">{text.volume}</span>
+            <input
+              aria-label={text.volume}
+              aria-valuetext={`${Math.round(volume * 100)}%`}
+              max="1"
+              min="0"
+              onChange={(event) => setVolume(Number(event.target.value))}
+              step="0.01"
+              style={{ "--sound-volume": `${volume * 100}%` } as CSSProperties}
+              type="range"
+              value={volume}
+            />
+          </label>
+        </div>
         <button aria-label={text.settings} className="sound-settings-trigger" onClick={() => setIsOpen((value) => !value)} type="button">
           {isOpen ? <ListMusic size={14} /> : <Settings2 size={14} />}
         </button>
