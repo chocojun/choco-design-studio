@@ -170,6 +170,14 @@ export function MusicPlayer() {
   const autoplayPendingRef = useRef(true);
   const idleTimerRef = useRef<number | null>(null);
   const crossfadeRef = useRef<{ audio: HTMLAudioElement; frame: number } | null>(null);
+  const mediaControlsRef = useRef({
+    next: () => {},
+    pause: () => {},
+    play: () => {},
+    previous: () => {},
+    seek: (_value: number) => {},
+    toggle: () => {},
+  });
   const [tracks, setTracks] = useState<Track[]>([]);
   const [currentId, setCurrentId] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
@@ -501,6 +509,129 @@ export function MusicPlayer() {
     }
     finishSeek(pointerSeekValue(event));
   };
+
+  mediaControlsRef.current = {
+    next: () => goTo(1),
+    pause: () => {
+      if (audioRef.current && !audioRef.current.paused) void togglePlayback();
+    },
+    play: () => {
+      if (audioRef.current?.paused) void togglePlayback();
+    },
+    previous: () => goTo(-1),
+    seek: seekAudio,
+    toggle: () => void togglePlayback(),
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const target = event.target;
+      const isEditing = target instanceof HTMLElement && (
+        target.isContentEditable
+        || ["INPUT", "SELECT", "TEXTAREA"].includes(target.tagName)
+      );
+
+      if (
+        event.defaultPrevented
+        || event.repeat
+        || event.metaKey
+        || event.ctrlKey
+        || event.altKey
+        || isEditing
+      ) return;
+
+      switch (event.code || event.key) {
+        case "KeyF":
+        case "MediaPlayPause":
+          event.preventDefault();
+          mediaControlsRef.current.toggle();
+          break;
+        case "MediaTrackPrevious":
+          event.preventDefault();
+          mediaControlsRef.current.previous();
+          break;
+        case "MediaTrackNext":
+          event.preventDefault();
+          mediaControlsRef.current.next();
+          break;
+        default:
+          break;
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  useEffect(() => {
+    if (!("mediaSession" in navigator)) return;
+
+    const handlers: Array<[MediaSessionAction, MediaSessionActionHandler]> = [
+      ["play", () => mediaControlsRef.current.play()],
+      ["pause", () => mediaControlsRef.current.pause()],
+      ["previoustrack", () => mediaControlsRef.current.previous()],
+      ["nexttrack", () => mediaControlsRef.current.next()],
+      ["seekbackward", (details) => {
+        const audio = audioRef.current;
+        if (audio) mediaControlsRef.current.seek(Math.max(0, audio.currentTime - (details.seekOffset ?? 10)));
+      }],
+      ["seekforward", (details) => {
+        const audio = audioRef.current;
+        if (audio) mediaControlsRef.current.seek(Math.min(audio.duration || Infinity, audio.currentTime + (details.seekOffset ?? 10)));
+      }],
+      ["seekto", (details) => {
+        if (typeof details.seekTime === "number") mediaControlsRef.current.seek(details.seekTime);
+      }],
+    ];
+
+    handlers.forEach(([action, handler]) => {
+      try {
+        navigator.mediaSession.setActionHandler(action, handler);
+      } catch {
+        // Some browsers expose Media Session without supporting every action.
+      }
+    });
+
+    return () => handlers.forEach(([action]) => {
+      try {
+        navigator.mediaSession.setActionHandler(action, null);
+      } catch {
+        // Ignore unsupported action cleanup.
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!("mediaSession" in navigator)) return;
+
+    try {
+      navigator.mediaSession.playbackState = isPlaying ? "playing" : "paused";
+      navigator.mediaSession.metadata = currentTrack
+        ? new MediaMetadata({
+            album: currentTrack.album ?? "LAVIE MUSIC STORE",
+            artist: currentTrack.artist ?? "LAVIE",
+            artwork: currentTrack.artwork ? [{ src: currentTrack.artwork }] : [],
+            title: currentTrack.title,
+          })
+        : null;
+    } catch {
+      // Metadata is an enhancement and must not interrupt playback.
+    }
+  }, [currentTrack, isPlaying]);
+
+  useEffect(() => {
+    if (!("mediaSession" in navigator) || !Number.isFinite(effectiveDuration) || effectiveDuration <= 0) return;
+
+    try {
+      navigator.mediaSession.setPositionState({
+        duration: effectiveDuration,
+        playbackRate: audioRef.current?.playbackRate ?? 1,
+        position: Math.max(0, Math.min(displayedTime, effectiveDuration)),
+      });
+    } catch {
+      // Position state can be unavailable before the browser decodes the track.
+    }
+  }, [displayedTime, effectiveDuration]);
 
   return (
     <>
