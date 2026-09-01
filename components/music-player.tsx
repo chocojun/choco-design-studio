@@ -4,6 +4,7 @@ import {
   ArrowDown,
   ArrowUp,
   ExternalLink,
+  FolderOpen,
   ListMusic,
   Pause,
   Play,
@@ -42,6 +43,18 @@ type StoredTrack = {
   title: string;
   blob: Blob;
 };
+
+const supportedAudioExtensions = /\.(mp3|m4a|aac|wav|flac|ogg|opus)$/i;
+
+function localTrackId(file: File) {
+  const source = `${file.webkitRelativePath || file.name}:${file.size}:${file.lastModified}`;
+  let hash = 2166136261;
+  for (let index = 0; index < source.length; index += 1) {
+    hash ^= source.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return `local-${(hash >>> 0).toString(36)}`;
+}
 
 const originalTracks = [
   ["Chrome Afterglow", 68],
@@ -84,6 +97,7 @@ const copy: Record<Locale, Record<string, string>> = {
     title: "Sound settings",
     subtitle: "15 original fluid studies",
     upload: "Add audio",
+    importStore: "Import LAVIE MUSIC STORE",
     volume: "Volume",
     repeat: "Repeat playlist",
     reset: "Reset order",
@@ -104,6 +118,7 @@ const copy: Record<Locale, Record<string, string>> = {
     title: "声音后台",
     subtitle: "15 首原创液态音乐",
     upload: "添加音频",
+    importStore: "导入 LAVIE MUSIC STORE",
     volume: "音量",
     repeat: "歌单循环",
     reset: "恢复默认顺序",
@@ -124,6 +139,7 @@ const copy: Record<Locale, Record<string, string>> = {
     title: "聲音後台",
     subtitle: "15 首原創液態音樂",
     upload: "加入音訊",
+    importStore: "匯入 LAVIE MUSIC STORE",
     volume: "音量",
     repeat: "歌單循環",
     reset: "恢復預設順序",
@@ -182,6 +198,7 @@ export function MusicPlayer() {
   const text = copy[locale];
   const audioRef = useRef<HTMLAudioElement>(null);
   const uploadRef = useRef<HTMLInputElement>(null);
+  const folderUploadRef = useRef<HTMLInputElement>(null);
   const seekingRef = useRef(false);
   const [tracks, setTracks] = useState<Track[]>(defaultTracks);
   const [currentId, setCurrentId] = useState(defaultTracks[0].id);
@@ -303,9 +320,12 @@ export function MusicPlayer() {
   };
 
   const handleUpload = async (event: ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(event.target.files ?? []).filter((file) => file.type.startsWith("audio/"));
+    const files = Array.from(event.target.files ?? []).filter((file) => (
+      file.type.startsWith("audio/") || supportedAudioExtensions.test(file.name)
+    ));
     for (const file of files) {
-      const id = `local-${crypto.randomUUID()}`;
+      const id = localTrackId(file);
+      if (tracks.some((track) => track.id === id)) continue;
       await storeTrack({ id, title: file.name.replace(/\.[^.]+$/, ""), blob: file });
       setTracks((items) => [...items, {
         id,
@@ -454,6 +474,16 @@ export function MusicPlayer() {
 
         <div className="sound-panel-foot">
           <input accept="audio/*" hidden multiple onChange={handleUpload} ref={uploadRef} type="file" />
+          <input
+            {...{ directory: "", webkitdirectory: "" }}
+            accept="audio/*"
+            hidden
+            multiple
+            onChange={handleUpload}
+            ref={folderUploadRef}
+            type="file"
+          />
+          <button onClick={() => folderUploadRef.current?.click()} type="button"><FolderOpen size={15} /> {text.importStore}</button>
           <button onClick={() => uploadRef.current?.click()} type="button"><Upload size={15} /> {text.upload}</button>
           <button onClick={resetPlaylist} type="button"><RotateCcw size={15} /> {text.reset}</button>
         </div>
