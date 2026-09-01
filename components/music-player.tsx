@@ -459,61 +459,56 @@ export function MusicPlayer() {
         </div>
       </aside>
 
-      <div className="sound-dock">
-        <button aria-label={isPlaying ? text.pause : text.play} className="sound-cover" onClick={togglePlayback} type="button">
-          <img alt="" height="76" src={currentTrack?.artwork ?? withBasePath("/clippings/03-blue-threshold.jpg")} width="76" />
-          <span aria-hidden="true" className={isPlaying ? "is-playing" : ""} />
+      <div className={`sound-dock ${isOpen ? "is-expanded" : ""} ${isPlaying ? "is-playing" : ""}`}>
+        <div className="sound-transport" aria-label="Audio controls">
+          <button aria-label={text.previous} onClick={() => goTo(-1)} type="button"><SkipBack size={13} fill="currentColor" /></button>
+          <button aria-label={isPlaying ? text.pause : text.play} className="liquid-play" onClick={togglePlayback} type="button">
+            {isPlaying ? <Pause size={14} fill="currentColor" /> : <Play size={14} fill="currentColor" />}
+          </button>
+          <button aria-label={text.next} onClick={() => goTo(1)} type="button"><SkipForward size={13} fill="currentColor" /></button>
+        </div>
+
+        <button className="sound-now" onClick={() => setIsOpen((value) => !value)} type="button">
+          <strong>{currentTrack?.title ?? text.empty}</strong>
+          <small>{currentTrack?.artist ?? currentTrack?.detail ?? "LAVIE"}</small>
         </button>
 
-        <div className="sound-player-body">
-          <div className="sound-player-topline">
-            <div className="sound-now">
-              <strong>{currentTrack?.title ?? text.empty}</strong>
-              <small>{currentTrack?.artist ?? currentTrack?.detail ?? "LAVIE"}</small>
-            </div>
-            <button
-              aria-label={volume === 0 ? text.volume : `${text.volume}: 0`}
-              className="sound-mute"
-              onClick={() => setVolume((value) => value === 0 ? 0.42 : 0)}
-              type="button"
-            >
-              {volume === 0 ? <VolumeX size={14} /> : <Volume2 size={14} />}
-            </button>
-          </div>
-
-          <label className="sound-progress">
-            <input
-              aria-label={text.seek}
-              max={effectiveDuration}
-              min="0"
-              onChange={(event) => previewSeek(Number(event.target.value))}
-              onInput={(event) => previewSeek(Number(event.currentTarget.value))}
-              onPointerCancel={endPointerSeek}
-              onPointerDown={beginPointerSeek}
-              onPointerMove={movePointerSeek}
-              onPointerUp={endPointerSeek}
-              step="0.1"
-              style={{ "--sound-progress": `${effectiveDuration ? (displayedTime / effectiveDuration) * 100 : 0}%` } as CSSProperties}
-              type="range"
-              value={Math.min(displayedTime, effectiveDuration)}
-            />
-          </label>
-
-          <div className="sound-player-controls">
-            <div className="sound-transport">
-              <button aria-label={text.previous} onClick={() => goTo(-1)} type="button"><SkipBack size={15} fill="currentColor" /></button>
-              <button aria-label={isPlaying ? text.pause : text.play} className="liquid-play" onClick={togglePlayback} type="button">
-                {isPlaying ? <Pause size={16} fill="currentColor" /> : <Play size={16} fill="currentColor" />}
-              </button>
-              <button aria-label={text.next} onClick={() => goTo(1)} type="button"><SkipForward size={15} fill="currentColor" /></button>
-            </div>
-            <span className="sound-time">{formatTime(displayedTime)} / {formatTime(effectiveDuration)}</span>
-            <button aria-label={text.settings} className="sound-settings-trigger" onClick={() => setIsOpen((value) => !value)} type="button">
-              {isOpen ? <ListMusic size={15} /> : <Settings2 size={15} />}
-            </button>
-            <span className="sound-index">{progressLabel}</span>
-          </div>
+        <div aria-hidden="true" className="sound-spectrum">
+          {Array.from({ length: 12 }, (_, index) => <span key={index} />)}
         </div>
+
+        <label className="sound-progress">
+          <span className="sr-only">{text.seek}</span>
+          <input
+            aria-label={text.seek}
+            max={effectiveDuration}
+            min="0"
+            onChange={(event) => previewSeek(Number(event.target.value))}
+            onInput={(event) => previewSeek(Number(event.currentTarget.value))}
+            onPointerCancel={endPointerSeek}
+            onPointerDown={beginPointerSeek}
+            onPointerMove={movePointerSeek}
+            onPointerUp={endPointerSeek}
+            step="0.1"
+            style={{ "--sound-progress": `${effectiveDuration ? (displayedTime / effectiveDuration) * 100 : 0}%` } as CSSProperties}
+            type="range"
+            value={Math.min(displayedTime, effectiveDuration)}
+          />
+        </label>
+
+        <span className="sound-time">{formatTime(displayedTime)} / {formatTime(effectiveDuration)}</span>
+        <button
+          aria-label={volume === 0 ? text.volume : `${text.volume}: 0`}
+          className="sound-mute"
+          onClick={() => setVolume((value) => value === 0 ? 0.42 : 0)}
+          type="button"
+        >
+          {volume === 0 ? <VolumeX size={13} /> : <Volume2 size={13} />}
+        </button>
+        <button aria-label={text.settings} className="sound-settings-trigger" onClick={() => setIsOpen((value) => !value)} type="button">
+          {isOpen ? <ListMusic size={14} /> : <Settings2 size={14} />}
+        </button>
+        <span className="sound-index">{progressLabel}</span>
       </div>
     </>
   );
