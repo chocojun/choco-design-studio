@@ -219,7 +219,7 @@
 
 .scope :global(.lavie-contact-curve) {
   display: block;
-  overflow: visible;
+  overflow: hidden;
   width: 100%;
 }
 
@@ -240,9 +240,9 @@
 @media (max-width: 767px) {
   .scope :global(.mobius-field) {
     height: calc(100svh - var(--header-height));
-    left: -14vw;
+    left: 0;
     top: var(--header-height);
-    width: 128vw;
+    width: 100%;
   }
 
   .scope :global(.lavie-hero) {
@@ -308,8 +308,8 @@
   }
 
   .scope :global(.lavie-contact-curve) {
-    margin-inline: -7vw;
-    width: 112vw;
+    margin-inline: 0;
+    width: 100%;
   }
 
   .scope :global(.lavie-contact-curve text) {

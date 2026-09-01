@@ -73,6 +73,7 @@ const copy: Record<Locale, Record<string, string>> = {
     volume: "Volume",
     repeat: "Repeat playlist",
     empty: "Import LAVIE MUSIC STORE to begin.",
+    emptyDock: "No music",
     custom: "Local audio",
     preview: "Stored only in this browser",
     openSpotify: "Open full track on Spotify",
@@ -95,6 +96,7 @@ const copy: Record<Locale, Record<string, string>> = {
     volume: "音量",
     repeat: "歌单循环",
     empty: "请先导入 LAVIE MUSIC STORE。",
+    emptyDock: "暂无音乐",
     custom: "本地音频",
     preview: "音乐仅保存在当前浏览器",
     openSpotify: "在 Spotify 打开完整歌曲",
@@ -117,6 +119,7 @@ const copy: Record<Locale, Record<string, string>> = {
     volume: "音量",
     repeat: "歌單循環",
     empty: "請先匯入 LAVIE MUSIC STORE。",
+    emptyDock: "暫無音樂",
     custom: "本地音訊",
     preview: "音樂僅儲存在目前瀏覽器",
     openSpotify: "在 Spotify 開啟完整歌曲",
@@ -738,7 +741,7 @@ export function MusicPlayer() {
         </div>
 
         <button className="sound-now" onClick={() => setIsOpen((value) => !value)} type="button">
-          <strong>{currentTrack?.title ?? text.empty}</strong>
+          <strong>{currentTrack?.title ?? text.emptyDock}</strong>
           <small>{currentTrack?.artist ?? currentTrack?.detail ?? "LAVIE"}</small>
         </button>
 

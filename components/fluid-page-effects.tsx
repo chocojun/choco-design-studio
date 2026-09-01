@@ -1,11 +1,10 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 export function FluidPageEffects() {
   const pathname = usePathname();
-  const progressRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -53,27 +52,5 @@ export function FluidPageEffects() {
     };
   }, [pathname]);
 
-  useEffect(() => {
-    const progress = progressRef.current;
-    if (!progress) return;
-
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (reducedMotion.matches) return;
-
-    const updateScroll = () => {
-      const range = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-      progress.style.transform = `scaleX(${Math.min(1, window.scrollY / range)})`;
-    };
-
-    window.addEventListener("scroll", updateScroll, { passive: true });
-    updateScroll();
-
-    return () => {
-      window.removeEventListener("scroll", updateScroll);
-    };
-  }, []);
-
-  return (
-    <div aria-hidden="true" className="mercury-scroll-track"><div ref={progressRef} /></div>
-  );
+  return null;
 }

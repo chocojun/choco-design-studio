@@ -1363,7 +1363,7 @@ a {
   .slide-physical-button {
     bottom: auto;
     height: 46px;
-    top: 44svh;
+    top: 38svh;
     transform: translateY(-50%);
     width: 46px;
   }
@@ -6125,26 +6125,6 @@ a {
   100% { opacity: 0; transform: translateX(115%) skewX(-12deg); }
 }
 
-.mercury-scroll-track {
-  background: rgba(13, 13, 13, 0.08);
-  height: 2px;
-  left: 0;
-  pointer-events: none;
-  position: fixed;
-  right: 0;
-  top: calc(var(--header-height) - 2px);
-  z-index: 120;
-}
-
-.mercury-scroll-track > div {
-  background: linear-gradient(90deg, #303030 0%, #f5f5f3 42%, #777 62%, #0d0d0d 100%);
-  box-shadow: 0 0 7px rgba(255, 255, 255, 0.5);
-  height: 100%;
-  transform: scaleX(0);
-  transform-origin: left;
-  will-change: transform;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .liquid-reveal,
   .liquid-reveal.is-liquid-visible {
@@ -6152,8 +6132,7 @@ a {
     transition: none;
   }
 
-  .liquid-reveal::after,
-  .mercury-scroll-track {
+  .liquid-reveal::after {
     display: none;
   }
 
@@ -6247,6 +6226,17 @@ a {
   width: min(640px, calc(100vw - 28px));
 }
 
+.sound-progress {
+  max-width: 100%;
+  overflow: hidden;
+  width: 100%;
+}
+
+.sound-progress input {
+  max-width: 100%;
+  min-width: 0;
+}
+
 .sound-spectrum {
   gap: 2px;
 }
@@ -6299,5 +6289,22 @@ a {
   .sound-volume {
     grid-column: 4;
     grid-row: 1;
+  }
+
+  .exhibit-object {
+    overflow: clip;
+    width: 100%;
+  }
+
+  .metal-ripple {
+    width: 96%;
+  }
+
+  .metal-ripple-two {
+    width: 88%;
+  }
+
+  .metal-ripple-three {
+    width: 72%;
   }
 }
