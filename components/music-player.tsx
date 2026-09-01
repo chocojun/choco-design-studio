@@ -21,7 +21,6 @@ import {
 import { ChangeEvent, CSSProperties, PointerEvent as ReactPointerEvent, useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/components/language-provider";
 import type { Locale } from "@/lib/i18n";
-import { withBasePath } from "@/lib/site-path";
 
 type Track = {
   id: string;
@@ -56,35 +55,6 @@ function localTrackId(file: File) {
   return `local-${(hash >>> 0).toString(36)}`;
 }
 
-const originalTracks = [
-  ["Chrome Afterglow", 68],
-  ["Soft Current", 72],
-  ["Mercury Veil", 65],
-  ["Pearl Static", 70],
-  ["Slow Mirror", 66],
-  ["Warm Alloy", 64],
-  ["Night Surface", 73],
-  ["Afterlight", 67],
-  ["Quiet Orbit", 74],
-  ["Satin Weather", 69],
-  ["Still Moving", 63],
-  ["Pale Gravity", 72],
-  ["Fluid Memory", 68],
-  ["Glass Hours", 71],
-  ["Formless Dawn", 75],
-] as const;
-
-const defaultTracks: Track[] = originalTracks.map(([title, durationSeconds], index) => {
-  const slug = title.toLowerCase().replaceAll(" ", "-");
-  return {
-    id: slug,
-    title,
-    durationSeconds,
-    detail: `LAVIE original · Study ${String(index + 1).padStart(2, "0")}`,
-    src: withBasePath(`/audio/concepts/${String(index + 1).padStart(2, "0")}-${slug}.mp3`),
-  };
-});
-
 const copy: Record<Locale, Record<string, string>> = {
   en: {
     now: "Now playing",
@@ -95,15 +65,14 @@ const copy: Record<Locale, Record<string, string>> = {
     settings: "Playlist settings",
     close: "Close settings",
     title: "Sound settings",
-    subtitle: "15 original fluid studies",
+    subtitle: "Music selected by the site manager",
     upload: "Add audio",
     importStore: "Import LAVIE MUSIC STORE",
     volume: "Volume",
     repeat: "Repeat playlist",
-    reset: "Reset order",
-    empty: "Add a track to begin.",
+    empty: "Import LAVIE MUSIC STORE to begin.",
     custom: "Local audio",
-    preview: "Original music composed for LAVIE",
+    preview: "Stored only in this browser",
     openSpotify: "Open full track on Spotify",
     seek: "Seek audio",
   },
@@ -116,15 +85,14 @@ const copy: Record<Locale, Record<string, string>> = {
     settings: "歌单设置",
     close: "关闭设置",
     title: "声音后台",
-    subtitle: "15 首原创液态音乐",
+    subtitle: "由网站管理者决定的播放列表",
     upload: "添加音频",
     importStore: "导入 LAVIE MUSIC STORE",
     volume: "音量",
     repeat: "歌单循环",
-    reset: "恢复默认顺序",
-    empty: "添加一首音乐后即可播放。",
+    empty: "请先导入 LAVIE MUSIC STORE。",
     custom: "本地音频",
-    preview: "为 LAVIE 创作的原创背景音乐",
+    preview: "音乐仅保存在当前浏览器",
     openSpotify: "在 Spotify 打开完整歌曲",
     seek: "调整播放进度",
   },
@@ -137,15 +105,14 @@ const copy: Record<Locale, Record<string, string>> = {
     settings: "歌單設定",
     close: "關閉設定",
     title: "聲音後台",
-    subtitle: "15 首原創液態音樂",
+    subtitle: "由網站管理者決定的播放清單",
     upload: "加入音訊",
     importStore: "匯入 LAVIE MUSIC STORE",
     volume: "音量",
     repeat: "歌單循環",
-    reset: "恢復預設順序",
-    empty: "加入一首音樂後即可播放。",
+    empty: "請先匯入 LAVIE MUSIC STORE。",
     custom: "本地音訊",
-    preview: "為 LAVIE 創作的原創背景音樂",
+    preview: "音樂僅儲存在目前瀏覽器",
     openSpotify: "在 Spotify 開啟完整歌曲",
     seek: "調整播放進度",
   },
@@ -154,7 +121,7 @@ const copy: Record<Locale, Record<string, string>> = {
 const databaseName = "lavie-sound-archive";
 const storeName = "tracks";
 const settingsKey = "lavie-player-settings";
-const settingsVersion = 3;
+const settingsVersion = 4;
 
 function openDatabase() {
   return new Promise<IDBDatabase>((resolve, reject) => {
@@ -200,8 +167,10 @@ export function MusicPlayer() {
   const uploadRef = useRef<HTMLInputElement>(null);
   const folderUploadRef = useRef<HTMLInputElement>(null);
   const seekingRef = useRef(false);
-  const [tracks, setTracks] = useState<Track[]>(defaultTracks);
-  const [currentId, setCurrentId] = useState(defaultTracks[0].id);
+  const autoplayPendingRef = useRef(true);
+  const idleTimerRef = useRef<number | null>(null);
+  const [tracks, setTracks] = useState<Track[]>([]);
+  const [currentId, setCurrentId] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [repeat, setRepeat] = useState(true);
@@ -211,9 +180,10 @@ export function MusicPlayer() {
   const [mediaDuration, setMediaDuration] = useState(0);
   const [isSeeking, setIsSeeking] = useState(false);
   const [seekDraft, setSeekDraft] = useState(0);
+  const [isDockIdle, setIsDockIdle] = useState(false);
 
-  const currentIndex = Math.max(0, tracks.findIndex((track) => track.id === currentId));
-  const currentTrack = tracks[currentIndex];
+  const currentIndex = tracks.findIndex((track) => track.id === currentId);
+  const currentTrack = currentIndex >= 0 ? tracks[currentIndex] : undefined;
   const effectiveDuration = mediaDuration || currentTrack?.durationSeconds || 0;
   const displayedTime = isSeeking ? seekDraft : currentTime;
 
@@ -232,14 +202,17 @@ export function MusicPlayer() {
         }));
         const saved = window.localStorage.getItem(settingsKey);
         const settings = saved ? JSON.parse(saved) as { version?: number; order?: string[]; currentId?: string; repeat?: boolean; volume?: number } : {};
-        const merged = [...defaultTracks, ...custom];
+        const merged = custom;
         const hasCurrentSchema = settings.version === settingsVersion;
         const order = new Map(hasCurrentSchema ? settings.order?.map((id, index) => [id, index]) : undefined);
         const ordered = hasCurrentSchema && settings.order
           ? [...merged].sort((a, b) => (order.get(a.id) ?? 999) - (order.get(b.id) ?? 999))
           : merged;
         setTracks(ordered);
-        if (hasCurrentSchema && settings.currentId && ordered.some((track) => track.id === settings.currentId)) setCurrentId(settings.currentId);
+        const savedCurrent = hasCurrentSchema && settings.currentId && ordered.some((track) => track.id === settings.currentId)
+          ? settings.currentId
+          : ordered[0]?.id;
+        setCurrentId(savedCurrent ?? "");
         if (typeof settings.repeat === "boolean") setRepeat(settings.repeat);
         if (typeof settings.volume === "number") setVolume(settings.volume);
         setIsReady(true);
@@ -272,6 +245,39 @@ export function MusicPlayer() {
   }, [currentId]);
 
   useEffect(() => {
+    const audio = audioRef.current;
+    if (!isReady || !currentTrack || !audio || !autoplayPendingRef.current) return;
+
+    const attemptAutoplay = () => {
+      audio.play()
+        .then(() => {
+          autoplayPendingRef.current = false;
+          setIsPlaying(true);
+        })
+        .catch(() => setIsPlaying(false));
+    };
+
+    if (audio.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) attemptAutoplay();
+    else audio.addEventListener("canplay", attemptAutoplay, { once: true });
+
+    const unlockAutoplay = () => {
+      if (!autoplayPendingRef.current) return;
+      audio.play()
+        .then(() => {
+          autoplayPendingRef.current = false;
+          setIsPlaying(true);
+        })
+        .catch(() => setIsPlaying(false));
+    };
+    window.addEventListener("pointerdown", unlockAutoplay, { once: true });
+
+    return () => {
+      audio.removeEventListener("canplay", attemptAutoplay);
+      window.removeEventListener("pointerdown", unlockAutoplay);
+    };
+  }, [currentTrack, isReady]);
+
+  useEffect(() => {
     setCurrentTime(0);
     setSeekDraft(0);
     setIsSeeking(false);
@@ -279,9 +285,27 @@ export function MusicPlayer() {
     setMediaDuration(currentTrack?.durationSeconds ?? 0);
   }, [currentId]);
 
+  useEffect(() => {
+    idleTimerRef.current = window.setTimeout(() => setIsDockIdle(true), 10_000);
+    return () => {
+      if (idleTimerRef.current) window.clearTimeout(idleTimerRef.current);
+    };
+  }, []);
+
+  const showDock = () => {
+    if (idleTimerRef.current) window.clearTimeout(idleTimerRef.current);
+    setIsDockIdle(false);
+  };
+
+  const queueDockFade = () => {
+    if (idleTimerRef.current) window.clearTimeout(idleTimerRef.current);
+    idleTimerRef.current = window.setTimeout(() => setIsDockIdle(true), 10_000);
+  };
+
   const goTo = (direction: number) => {
     if (!tracks.length) return;
-    const nextIndex = (currentIndex + direction + tracks.length) % tracks.length;
+    const baseIndex = currentIndex >= 0 ? currentIndex : 0;
+    const nextIndex = (baseIndex + direction + tracks.length) % tracks.length;
     setCurrentId(tracks[nextIndex].id);
   };
 
@@ -291,11 +315,13 @@ export function MusicPlayer() {
     if (audio.paused) {
       try {
         await audio.play();
+        autoplayPendingRef.current = false;
         setIsPlaying(true);
       } catch {
         setIsPlaying(false);
       }
     } else {
+      autoplayPendingRef.current = false;
       audio.pause();
       setIsPlaying(false);
     }
@@ -323,9 +349,11 @@ export function MusicPlayer() {
     const files = Array.from(event.target.files ?? []).filter((file) => (
       file.type.startsWith("audio/") || supportedAudioExtensions.test(file.name)
     ));
+    const knownIds = new Set(tracks.map((track) => track.id));
     for (const file of files) {
       const id = localTrackId(file);
-      if (tracks.some((track) => track.id === id)) continue;
+      if (knownIds.has(id)) continue;
+      knownIds.add(id);
       await storeTrack({ id, title: file.name.replace(/\.[^.]+$/, ""), blob: file });
       setTracks((items) => [...items, {
         id,
@@ -334,6 +362,7 @@ export function MusicPlayer() {
         src: URL.createObjectURL(file),
         custom: true,
       }]);
+      setCurrentId((value) => value || id);
     }
     event.target.value = "";
   };
@@ -341,23 +370,16 @@ export function MusicPlayer() {
   const removeTrack = async (track: Track) => {
     if (!track.custom) return;
     await deleteStoredTrack(track.id);
-    setTracks((items) => items.filter((item) => item.id !== track.id));
+    const remaining = tracks.filter((item) => item.id !== track.id);
+    setTracks(remaining);
     if (currentId === track.id) {
-      setCurrentId(defaultTracks[0].id);
+      setCurrentId(remaining[0]?.id ?? "");
       setIsPlaying(false);
     }
     URL.revokeObjectURL(track.src);
   };
 
-  const resetPlaylist = () => {
-    setTracks((items) => [
-      ...defaultTracks,
-      ...items.filter((item) => item.custom),
-    ]);
-    setCurrentId(defaultTracks[0].id);
-  };
-
-  const progressLabel = `${String(currentIndex + 1).padStart(2, "0")} / ${String(tracks.length).padStart(2, "0")}`;
+  const progressLabel = `${String(currentIndex >= 0 ? currentIndex + 1 : 0).padStart(2, "0")} / ${String(tracks.length).padStart(2, "0")}`;
   const formatTime = (seconds: number) => {
     if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
     return `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, "0")}`;
@@ -485,11 +507,16 @@ export function MusicPlayer() {
           />
           <button onClick={() => folderUploadRef.current?.click()} type="button"><FolderOpen size={15} /> {text.importStore}</button>
           <button onClick={() => uploadRef.current?.click()} type="button"><Upload size={15} /> {text.upload}</button>
-          <button onClick={resetPlaylist} type="button"><RotateCcw size={15} /> {text.reset}</button>
         </div>
       </aside>
 
-      <div className={`sound-dock ${isOpen ? "is-expanded" : ""} ${isPlaying ? "is-playing" : ""}`}>
+      <div
+        className={`sound-dock ${isOpen ? "is-expanded" : ""} ${isPlaying ? "is-playing" : ""} ${isDockIdle && !isOpen ? "is-idle" : ""}`}
+        onBlurCapture={queueDockFade}
+        onFocusCapture={showDock}
+        onPointerEnter={showDock}
+        onPointerLeave={queueDockFade}
+      >
         <div className="sound-transport" aria-label="Audio controls">
           <button aria-label={text.previous} onClick={() => goTo(-1)} type="button"><SkipBack size={13} fill="currentColor" /></button>
           <button aria-label={isPlaying ? text.pause : text.play} className="liquid-play" onClick={togglePlayback} type="button">
