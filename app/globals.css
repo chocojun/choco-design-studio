@@ -6429,9 +6429,12 @@ html[data-theme="night"] body {
 
 .site-shell.is-night-mode main,
 .site-shell.is-night-mode .page-frame,
-.site-shell.is-night-mode .lavie-hero,
 .site-shell.is-night-mode .lavie-contact {
   background-color: #050505;
+}
+
+.site-shell.is-night-mode .lavie-hero {
+  background-color: transparent;
 }
 
 .site-shell.is-night-mode .lavie-experience,

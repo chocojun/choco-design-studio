@@ -49,6 +49,7 @@
 
 :global(html[data-theme="night"]) .scope :global(.lavie-logo-lockup img) {
   filter: invert(1);
+  mix-blend-mode: difference;
 }
 
 @keyframes lavie-logo-arrival {

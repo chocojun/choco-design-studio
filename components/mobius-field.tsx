@@ -57,12 +57,14 @@ export function MobiusField() {
       side: THREE.DoubleSide,
     });
     const nightMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0x17191e,
+      color: 0x3a3f48,
       clearcoat: 1,
-      clearcoatRoughness: 0.16,
-      envMapIntensity: 1.45,
+      clearcoatRoughness: 0.2,
+      emissive: 0x101217,
+      emissiveIntensity: 0.5,
+      envMapIntensity: 1.35,
       metalness: 1,
-      roughness: 0.2,
+      roughness: 0.25,
       side: THREE.DoubleSide,
     });
     const ring: THREE.Mesh<THREE.BufferGeometry, THREE.Material> = new THREE.Mesh(geometry, material);
