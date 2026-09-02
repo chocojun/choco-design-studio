@@ -1,9 +1,11 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import { useLanguage } from "@/components/language-provider";
 import { PageFrame } from "@/components/site-shell";
 import type { Locale } from "@/lib/i18n";
+import { withBasePath } from "@/lib/site-path";
 import styles from "./home.module.css";
 
 const MobiusField = dynamic(
@@ -44,8 +46,15 @@ export default function Home() {
           <h1 className="sr-only" id="home-title">
             Lavie
           </h1>
-          <div aria-hidden="true" className="lavie-logo-lockup">
-            <span>LAVIE</span>
+          <div className="lavie-logo-lockup">
+            <Image
+              alt="Lavie"
+              height={573}
+              priority
+              sizes="(max-width: 767px) 88vw, 72vw"
+              src={withBasePath("/assets/lavie-handwritten-logo.png")}
+              width={1212}
+            />
           </div>
         </section>
 

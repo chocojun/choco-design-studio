@@ -37,18 +37,18 @@
   z-index: 2;
 }
 
-.scope :global(.lavie-logo-lockup span) {
+.scope :global(.lavie-logo-lockup img) {
   animation: lavie-logo-arrival 1250ms cubic-bezier(0.22, 1, 0.36, 1) 120ms both;
-  color: var(--foreground);
   display: block;
-  font-family: var(--fb-font-display);
-  font-size: clamp(92px, 20vw, 300px);
-  font-weight: 500;
-  line-height: 0.82;
+  height: auto;
+  mix-blend-mode: normal;
   opacity: 0;
-  text-align: center;
   transform: translateZ(0);
   width: 100%;
+}
+
+:global(html[data-theme="night"]) .scope :global(.lavie-logo-lockup img) {
+  filter: invert(1);
 }
 
 @keyframes lavie-logo-arrival {
@@ -323,7 +323,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .scope :global(.lavie-logo-lockup span) {
+  .scope :global(.lavie-logo-lockup img) {
     animation: none;
     opacity: 1;
   }
