@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Layers } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { LanguageSwitcher } from "@/components/language-switcher";
@@ -12,11 +12,19 @@ import { useLanguage } from "@/components/language-provider";
 import { MusicPlayer } from "@/components/music-player";
 import { withBasePath } from "@/lib/site-path";
 
+type ThemeMode = "day" | "night";
+
+function themeFromLocalClock(date = new Date()): ThemeMode {
+  const hour = date.getHours();
+  return hour >= 7 && hour < 19 ? "day" : "night";
+}
+
 export function SiteShell({ children }: { children: ReactNode }) {
   const { text } = useLanguage();
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isGlassMode, setIsGlassMode] = useState(true);
+  const [themeMode, setThemeMode] = useState<ThemeMode>("day");
+  const [isThemePreview, setIsThemePreview] = useState(false);
   const navItems = [
     { href: "/", label: text.nav.index },
     { href: "/work", label: text.nav.work },
@@ -25,17 +33,29 @@ export function SiteShell({ children }: { children: ReactNode }) {
   ];
 
   useEffect(() => {
-    const savedMode = window.localStorage.getItem("lavie-surface-v2");
-    if (savedMode === "studio") setIsGlassMode(false);
-  }, []);
+    const syncWithClock = () => {
+      if (!isThemePreview) setThemeMode(themeFromLocalClock());
+    };
+
+    syncWithClock();
+    const timer = window.setInterval(syncWithClock, 60_000);
+    return () => window.clearInterval(timer);
+  }, [isThemePreview]);
 
   useEffect(() => {
-    document.documentElement.dataset.surface = isGlassMode ? "glass" : "studio";
-    window.localStorage.setItem("lavie-surface-v2", isGlassMode ? "glass" : "studio");
-  }, [isGlassMode]);
+    document.documentElement.dataset.theme = themeMode;
+    document.documentElement.style.colorScheme = themeMode === "night" ? "dark" : "light";
+  }, [themeMode]);
+
+  const toggleThemePreview = () => {
+    setIsThemePreview(true);
+    setThemeMode((mode) => (mode === "day" ? "night" : "day"));
+  };
+
+  const isNightMode = themeMode === "night";
 
   return (
-    <div className={`site-shell min-h-screen text-[var(--foreground)] ${isGlassMode ? "is-glass-mode" : ""}`}>
+    <div className={`site-shell min-h-screen text-[var(--foreground)] ${isNightMode ? "is-night-mode" : "is-day-mode"}`}>
       <header className="site-header">
         <div className="site-header-inner">
           <Link href="/" className="brand-mark" onClick={() => setIsMenuOpen(false)}>
@@ -56,14 +76,16 @@ export function SiteShell({ children }: { children: ReactNode }) {
 
           <div className="site-tools">
             <button
-              aria-label={isGlassMode ? "切换为纯白背景" : "切换为玻璃渐变背景"}
-              aria-pressed={isGlassMode}
+              aria-label={isNightMode ? "切换至日间模式" : "切换至夜间模式"}
+              aria-pressed={isNightMode}
               className="surface-mode-toggle"
-              onClick={() => setIsGlassMode((value) => !value)}
-              title={isGlassMode ? "纯白背景" : "玻璃渐变"}
+              onClick={toggleThemePreview}
+              title={`${isNightMode ? "夜间" : "日间"}模式${isThemePreview ? " · 手动预览" : " · 自动跟随本地时间"}`}
               type="button"
             >
-              <Layers aria-hidden="true" size={16} strokeWidth={1.7} />
+              {isNightMode
+                ? <Moon aria-hidden="true" size={15} strokeWidth={1.8} />
+                : <Sun aria-hidden="true" size={15} strokeWidth={1.8} />}
             </button>
             <LanguageSwitcher />
             <button

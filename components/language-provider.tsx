@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { copy, type Locale } from "@/lib/i18n";
+import { copy, locales, type Locale } from "@/lib/i18n";
 
 type LanguageContextValue = {
   locale: Locale;
@@ -13,24 +13,18 @@ const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 function detectLocale(): Locale {
   if (typeof navigator === "undefined") {
-    return "zh-TW";
+    return "zh-CN";
   }
 
   const language = navigator.language.toLowerCase();
-  if (language.includes("cn") || language.includes("hans")) {
-    return "zh-CN";
-  }
-  if (language.includes("tw") || language.includes("hk") || language.includes("hant")) {
-    return "zh-TW";
-  }
   if (language.startsWith("zh")) {
-    return "zh-TW";
+    return "zh-CN";
   }
   return "en";
 }
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>("zh-TW");
+  const [locale, setLocaleState] = useState<Locale>("zh-CN");
 
   useEffect(() => {
     let stored: Locale | null = null;
@@ -39,7 +33,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     } catch {
       stored = null;
     }
-    const nextLocale = stored && stored in copy ? stored : detectLocale();
+    const nextLocale = stored && locales.some((item) => item.code === stored) ? stored : detectLocale();
     setLocaleState(nextLocale);
     document.documentElement.lang = nextLocale;
   }, []);

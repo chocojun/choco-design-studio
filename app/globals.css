@@ -653,21 +653,21 @@ a {
   transition: background 420ms ease;
 }
 
-.site-shell.is-glass-mode {
+.site-shell.is-day-mode {
   background: linear-gradient(135deg, #ffffff 0%, #f3f5f8 42%, #dde2e9 100%);
   background-attachment: fixed;
 }
 
-.site-shell.is-glass-mode .site-header {
+.site-shell.is-day-mode .site-header {
   backdrop-filter: blur(28px) saturate(170%);
   background: rgba(255, 255, 255, 0.58);
   border-color: rgba(255, 255, 255, 0.72);
 }
 
-.site-shell.is-glass-mode main,
-.site-shell.is-glass-mode .page-frame,
-.site-shell.is-glass-mode .lavie-hero,
-.site-shell.is-glass-mode .lavie-contact {
+.site-shell.is-day-mode main,
+.site-shell.is-day-mode .page-frame,
+.site-shell.is-day-mode .lavie-hero,
+.site-shell.is-day-mode .lavie-contact {
   background-color: transparent;
 }
 
@@ -6148,7 +6148,8 @@ a {
 
 /* Compact sampled-glass navigation and black acrylic audio object. */
 .site-header,
-.site-shell.is-glass-mode .site-header {
+.site-shell.is-day-mode .site-header,
+.site-shell.is-night-mode .site-header {
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
   background: transparent;
@@ -6336,7 +6337,8 @@ a {
   }
 
   .site-header,
-  .site-shell.is-glass-mode .site-header {
+  .site-shell.is-day-mode .site-header,
+  .site-shell.is-night-mode .site-header {
     padding: 5px 7px 0;
   }
 
@@ -6381,11 +6383,122 @@ a {
 
 @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
   .site-header-inner,
-  .site-shell.is-glass-mode .site-header-inner {
+  .site-shell.is-day-mode .site-header-inner,
+  .site-shell.is-night-mode .site-header-inner {
     background: rgba(248, 249, 251, 0.96);
   }
 
   .site-header-inner::before {
     display: none;
   }
+}
+
+/* Clock-aware night preview. The 3D canvas remains untouched so chrome keeps its natural reflections. */
+html[data-theme="night"] {
+  --background: #050505;
+  --foreground: #f5f5f7;
+  --muted: #a1a1a6;
+  --line: #2c2c2e;
+  --panel: #141416;
+  --accent: #ffffff;
+  --accent-2: #d1d1d6;
+  --shadow: rgba(0, 0, 0, 0.5);
+}
+
+.site-shell.is-night-mode {
+  background: #050505;
+}
+
+.site-shell.is-night-mode main,
+.site-shell.is-night-mode .page-frame,
+.site-shell.is-night-mode .lavie-hero,
+.site-shell.is-night-mode .lavie-contact {
+  background-color: transparent;
+}
+
+.site-shell.is-night-mode .site-header-inner {
+  background: rgba(19, 19, 21, 0.62);
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.34),
+    0 2px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+}
+
+.site-shell.is-night-mode .site-header-inner::before {
+  background:
+    linear-gradient(108deg, rgba(255, 255, 255, 0.09), rgba(50, 52, 58, 0.08) 46%, rgba(255, 255, 255, 0.05)),
+    rgba(7, 7, 8, 0.28);
+}
+
+.site-shell.is-night-mode .site-header-inner::after {
+  background:
+    radial-gradient(ellipse at 14% -25%, rgba(255, 255, 255, 0.24) 0 10%, transparent 38%),
+    linear-gradient(95deg, rgba(255, 255, 255, 0.1), transparent 22% 72%, rgba(255, 255, 255, 0.06));
+  box-shadow:
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.12),
+    inset 1px 0 0 rgba(255, 255, 255, 0.08),
+    inset -1px 0 0 rgba(0, 0, 0, 0.32);
+}
+
+.site-shell.is-night-mode .brand-mark img,
+.site-shell.is-night-mode .lavie-logo-lockup img {
+  filter: invert(1) contrast(1.15);
+  mix-blend-mode: screen;
+}
+
+.site-shell.is-night-mode .desktop-nav a:hover,
+.site-shell.is-night-mode .desktop-nav a:focus-visible,
+.site-shell.is-night-mode .desktop-nav a[aria-current="page"] {
+  color: #ffffff;
+}
+
+.site-shell.is-night-mode .surface-mode-toggle[aria-pressed="true"],
+.site-shell.is-night-mode .surface-mode-toggle:hover,
+.site-shell.is-night-mode .surface-mode-toggle:focus-visible {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+}
+
+.site-shell.is-night-mode .language-buttons {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.13);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.site-shell.is-night-mode .language-button {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.site-shell.is-night-mode .mobile-menu.is-open {
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  backdrop-filter: blur(24px) saturate(150%);
+  background: rgba(12, 12, 14, 0.92);
+}
+
+.site-shell.is-night-mode .lavie-manifesto {
+  background: #000000;
+}
+
+.site-shell.is-night-mode .lavie-contact {
+  color: var(--foreground);
+}
+
+.site-shell.is-night-mode .lavie-contact-curve text {
+  fill: var(--foreground);
+}
+
+.site-shell,
+.site-header-inner,
+.lavie-contact,
+.brand-mark img,
+.lavie-logo-lockup img {
+  transition:
+    background-color 360ms ease,
+    background 360ms ease,
+    border-color 360ms ease,
+    color 360ms ease,
+    filter 360ms ease;
 }

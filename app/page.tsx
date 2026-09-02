@@ -31,11 +31,6 @@ const homeCopy: Record<Locale, HomeCopy> = {
     statementBody: "Lavie 游走于时装、物件、视觉身份与数字文化之间。",
     contact: "Let’s play it cool.",
   },
-  "zh-TW": {
-    statement: ["感知，創造，", "關於美的一切。"],
-    statementBody: "Lavie 遊走於時裝、物件、視覺身份與數位文化之間。",
-    contact: "Let’s play it cool.",
-  },
 };
 
 export default function Home() {

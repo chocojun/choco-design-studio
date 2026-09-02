@@ -14,10 +14,9 @@ export type Clipping = {
   ratio: string;
 };
 
-const l = (en: string, zhCN: string, zhTW: string): Localized => ({
+const l = (en: string, zhCN: string, _zhTW?: string): Localized => ({
   en,
   "zh-CN": zhCN,
-  "zh-TW": zhTW,
 });
 
 const medium = l("digital clipping / image collage", "数字剪贴 / 图像拼贴", "數位剪貼 / 圖像拼貼");

@@ -9,7 +9,6 @@ import type { Locale } from "@/lib/i18n";
 const galleryCopy: Record<Locale, { download: string; enlarge: string; next: string; previous: string; type: string }> = {
   en: { download: "Download original", enlarge: "View full size", next: "Next work", previous: "Previous work", type: "Artwork type" },
   "zh-CN": { download: "下载原图", enlarge: "放大查看", next: "下一件作品", previous: "上一件作品", type: "作品类型" },
-  "zh-TW": { download: "下載原圖", enlarge: "放大查看", next: "下一件作品", previous: "上一件作品", type: "作品類型" },
 };
 
 export function ClippingGallery({ items }: { items: Clipping[] }) {
