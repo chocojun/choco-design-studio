@@ -687,6 +687,7 @@ a {
   font-size: 18px;
   font-weight: 800;
   line-height: 1;
+  transform: translateY(2px);
   text-transform: uppercase;
 }
 
