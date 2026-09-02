@@ -21,6 +21,7 @@ import {
 import { ChangeEvent, CSSProperties, PointerEvent as ReactPointerEvent, useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/components/language-provider";
 import type { Locale } from "@/lib/i18n";
+import { withBasePath } from "@/lib/site-path";
 
 type Track = {
   id: string;
@@ -72,10 +73,11 @@ const copy: Record<Locale, Record<string, string>> = {
     importStore: "Import LAVIE MUSIC STORE",
     volume: "Volume",
     repeat: "Repeat playlist",
-    empty: "Import LAVIE MUSIC STORE to begin.",
+    empty: "No online playlist has been published. Import local audio to preview it.",
     emptyDock: "No music",
     custom: "Local audio",
-    preview: "Stored only in this browser",
+    online: "Online audio",
+    preview: "Online tracks are available to every visitor. Local tracks stay in this browser.",
     openSpotify: "Open full track on Spotify",
     seek: "Seek audio",
     controls: "Audio controls",
@@ -99,10 +101,11 @@ const copy: Record<Locale, Record<string, string>> = {
     importStore: "导入 LAVIE MUSIC STORE",
     volume: "音量",
     repeat: "歌单循环",
-    empty: "请先导入 LAVIE MUSIC STORE。",
+    empty: "线上歌单尚未发布，可导入本地音频预览。",
     emptyDock: "暂无音乐",
     custom: "本地音频",
-    preview: "音乐仅保存在当前浏览器",
+    online: "线上音频",
+    preview: "线上歌单对所有访客可用；本地音频仅保存在当前浏览器。",
     openSpotify: "在 Spotify 打开完整歌曲",
     seek: "调整播放进度",
     controls: "音频控制",
@@ -115,7 +118,29 @@ const copy: Record<Locale, Record<string, string>> = {
 const databaseName = "lavie-sound-archive";
 const storeName = "tracks";
 const settingsKey = "lavie-player-settings";
-const settingsVersion = 4;
+const settingsVersion = 5;
+
+async function readPublicTracks() {
+  try {
+    const response = await fetch(withBasePath("/music/playlist.json"), { cache: "no-store" });
+    if (!response.ok) return [];
+    const data = await response.json() as { tracks?: Array<Partial<Track>> };
+    return (data.tracks ?? [])
+      .filter((track): track is Partial<Track> & Pick<Track, "id" | "src" | "title"> => (
+        typeof track.id === "string"
+        && typeof track.src === "string"
+        && typeof track.title === "string"
+      ))
+      .map((track) => ({
+        ...track,
+        detail: track.detail ?? track.artist ?? track.album ?? "LAVIE",
+        online: true,
+        src: /^https?:\/\//i.test(track.src) ? track.src : withBasePath(track.src),
+      }));
+  } catch {
+    return [];
+  }
+}
 
 function openDatabase() {
   return new Promise<IDBDatabase>((resolve, reject) => {
@@ -194,8 +219,8 @@ export function MusicPlayer() {
   useEffect(() => {
     let active = true;
     if (window.location.hash === "#sound-settings") setIsOpen(true);
-    readStoredTracks()
-      .then((stored) => {
+    Promise.all([readPublicTracks(), readStoredTracks()])
+      .then(([online, stored]) => {
         if (!active) return;
         const custom = stored.map((track) => ({
           id: track.id,
@@ -206,7 +231,7 @@ export function MusicPlayer() {
         }));
         const saved = window.localStorage.getItem(settingsKey);
         const settings = saved ? JSON.parse(saved) as { version?: number; order?: string[]; currentId?: string; repeat?: boolean; volume?: number } : {};
-        const merged = custom;
+        const merged = [...online, ...custom];
         const hasCurrentSchema = settings.version === settingsVersion;
         const order = new Map(hasCurrentSchema ? settings.order?.map((id, index) => [id, index]) : undefined);
         const ordered = hasCurrentSchema && settings.order
@@ -670,7 +695,7 @@ export function MusicPlayer() {
                 {track.artwork ? <img alt="" height="42" src={track.artwork} width="42" /> : <span className="sound-track-placeholder" />}
                 <span>
                   <strong>{track.title}</strong>
-                  <small>{track.custom ? text.custom : track.detail}</small>
+                  <small>{track.custom ? text.custom : track.online ? text.online : track.detail}</small>
                 </span>
               </button>
               <div className="sound-track-actions">

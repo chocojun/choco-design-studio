@@ -24,8 +24,7 @@ export const copy = {
     },
     work: {
       eyebrow: "剪贴画档案",
-      intro:
-        "二十件自制剪贴画被安装进 Lavie。每次只看一件作品，保留剪贴、错位、拼接与私人视觉研究的质感。",
+      intro: "混元空间。",
       still: "点击放大查看",
       moving: "动态视图已打开",
       playGif: "查看作品",
@@ -122,8 +121,7 @@ export const copy = {
     },
     work: {
       eyebrow: "Clipping archive",
-      intro:
-        "Twenty self-made clipping works are installed inside Lavie. One work occupies the page at a time, preserving the texture of cutting, misalignment, collage, and private visual research.",
+      intro: "A hybrid space.",
       still: "click to enlarge",
       moving: "motion view opened",
       playGif: "View work",
