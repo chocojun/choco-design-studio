@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -10,7 +9,6 @@ import { LanguageSwitcher } from "@/components/language-switcher";
 import { FluidPageEffects } from "@/components/fluid-page-effects";
 import { useLanguage } from "@/components/language-provider";
 import { MusicPlayer } from "@/components/music-player";
-import { withBasePath } from "@/lib/site-path";
 
 type ThemeMode = "day" | "night";
 
@@ -44,6 +42,8 @@ export function SiteShell({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     document.documentElement.dataset.theme = themeMode;
+    document.body.dataset.theme = themeMode;
+    document.documentElement.classList.toggle("theme-night", themeMode === "night");
     document.documentElement.style.colorScheme = themeMode === "night" ? "dark" : "light";
   }, [themeMode]);
 
@@ -59,7 +59,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
       <header className="site-header">
         <div className="site-header-inner">
           <Link href="/" className="brand-mark" onClick={() => setIsMenuOpen(false)}>
-            <Image alt="Lavie" height={573} priority src={withBasePath("/assets/lavie-handwritten-logo.png")} width={1212} />
+            <span>LAVIE</span>
           </Link>
 
           <nav aria-label="Primary navigation" className="desktop-nav">

@@ -1,7 +1,20 @@
 import type { Metadata } from "next";
+import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { SiteShell } from "@/components/site-shell";
 import { LanguageProvider } from "@/components/language-provider";
+
+const inter = Inter({
+  display: "swap",
+  subsets: ["latin"],
+  variable: "--font-inter",
+});
+
+const playfair = Playfair_Display({
+  display: "swap",
+  subsets: ["latin"],
+  variable: "--font-playfair",
+});
 
 export const metadata: Metadata = {
   title: "Lavie",
@@ -14,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html data-scroll-behavior="smooth" lang="en">
+    <html className={`${inter.variable} ${playfair.variable}`} data-scroll-behavior="smooth" lang="en">
       <body>
         <LanguageProvider>
           <SiteShell>{children}</SiteShell>

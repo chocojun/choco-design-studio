@@ -56,7 +56,16 @@ export function MobiusField() {
       roughness: 0.095,
       side: THREE.DoubleSide,
     });
-    const ring = new THREE.Mesh(geometry, material);
+    const nightMaterial = new THREE.MeshPhysicalMaterial({
+      color: 0x17191e,
+      clearcoat: 1,
+      clearcoatRoughness: 0.16,
+      envMapIntensity: 1.45,
+      metalness: 1,
+      roughness: 0.2,
+      side: THREE.DoubleSide,
+    });
+    const ring: THREE.Mesh<THREE.BufferGeometry, THREE.Material> = new THREE.Mesh(geometry, material);
     ring.rotation.set(-0.52, 0.2, -0.08);
     scene.add(ring);
 
@@ -73,6 +82,13 @@ export function MobiusField() {
     topologyThread.position.set(0, 0.08, -1.28);
     topologyThread.rotation.set(0.55, -0.12, 0.08);
     scene.add(topologyThread);
+
+    const applyTheme = () => {
+      ring.material = document.documentElement.dataset.theme === "night" ? nightMaterial : material;
+    };
+    const themeObserver = new MutationObserver(applyTheme);
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    applyTheme();
 
     const key = new THREE.SpotLight(0xffffff, 92, 24, Math.PI / 4.5, 0.72, 1.4);
     key.position.set(-2.8, 4.6, 7.2);
@@ -173,8 +189,10 @@ export function MobiusField() {
       window.removeEventListener("resize", resize);
       window.removeEventListener("scroll", updateScroll);
       window.removeEventListener("pointermove", updatePointer);
+      themeObserver.disconnect();
       geometry.dispose();
       material.dispose();
+      nightMaterial.dispose();
       knotGeometry.dispose();
       knotMaterial.dispose();
       environment.dispose();

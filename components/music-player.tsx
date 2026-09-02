@@ -78,6 +78,10 @@ const copy: Record<Locale, Record<string, string>> = {
     preview: "Stored only in this browser",
     openSpotify: "Open full track on Spotify",
     seek: "Seek audio",
+    controls: "Audio controls",
+    moveUp: "Move track up",
+    moveDown: "Move track down",
+    deleteTrack: "Delete track",
   },
   "zh-CN": {
     now: "正在播放",
@@ -101,6 +105,10 @@ const copy: Record<Locale, Record<string, string>> = {
     preview: "音乐仅保存在当前浏览器",
     openSpotify: "在 Spotify 打开完整歌曲",
     seek: "调整播放进度",
+    controls: "音频控制",
+    moveUp: "上移歌曲",
+    moveDown: "下移歌曲",
+    deleteTrack: "删除歌曲",
   },
 };
 
@@ -671,9 +679,9 @@ export function MusicPlayer() {
                     <ExternalLink size={14} />
                   </a>
                 ) : null}
-                <button aria-label="Move track up" disabled={index === 0} onClick={() => moveTrack(index, -1)} type="button"><ArrowUp size={14} /></button>
-                <button aria-label="Move track down" disabled={index === tracks.length - 1} onClick={() => moveTrack(index, 1)} type="button"><ArrowDown size={14} /></button>
-                {track.custom ? <button aria-label="Delete track" onClick={() => removeTrack(track)} type="button"><Trash2 size={14} /></button> : null}
+                <button aria-label={text.moveUp} disabled={index === 0} onClick={() => moveTrack(index, -1)} type="button"><ArrowUp size={14} /></button>
+                <button aria-label={text.moveDown} disabled={index === tracks.length - 1} onClick={() => moveTrack(index, 1)} type="button"><ArrowDown size={14} /></button>
+                {track.custom ? <button aria-label={text.deleteTrack} onClick={() => removeTrack(track)} type="button"><Trash2 size={14} /></button> : null}
               </div>
             </div>
           )) : <p className="sound-empty">{text.empty}</p>}
@@ -704,7 +712,7 @@ export function MusicPlayer() {
         onPointerEnter={showDock}
         onPointerLeave={queueDockFade}
       >
-        <div className="sound-transport" aria-label="Audio controls">
+        <div className="sound-transport" aria-label={text.controls}>
           <button aria-label={text.previous} onClick={() => goTo(-1)} type="button"><SkipBack size={13} fill="currentColor" /></button>
           <button aria-label={isPlaying ? text.pause : text.play} className="liquid-play" onClick={togglePlayback} type="button">
             {isPlaying ? <Pause size={14} fill="currentColor" /> : <Play size={14} fill="currentColor" />}
@@ -714,7 +722,7 @@ export function MusicPlayer() {
 
         <button className="sound-now" onClick={() => setIsOpen((value) => !value)} type="button">
           <strong>{currentTrack?.title ?? text.emptyDock}</strong>
-          <small>{currentTrack?.artist ?? currentTrack?.detail ?? "LAVIE"}</small>
+          <small>{currentTrack?.artist ?? (currentTrack?.custom ? text.custom : currentTrack?.detail) ?? "LAVIE"}</small>
         </button>
 
         <div aria-hidden="true" className="sound-spectrum">
