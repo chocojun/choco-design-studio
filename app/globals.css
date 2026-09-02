@@ -6388,7 +6388,7 @@ a {
   .sound-dock {
     bottom: 10px;
     gap: 5px;
-    grid-template-columns: 70px minmax(62px, 1fr) 48px 44px 24px;
+    grid-template-columns: 70px minmax(62px, 1fr) 48px 66px 28px;
     min-height: 62px;
     padding: 7px 8px;
     width: min(360px, calc(100vw - 24px));
@@ -6411,7 +6411,18 @@ a {
   }
 
   .sound-volume {
+    gap: 3px;
     grid-column: 4;
+    grid-row: 1;
+  }
+
+  .sound-volume .sound-mute {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .sound-volume label {
+    grid-column: 2;
     grid-row: 1;
   }
 
@@ -6563,4 +6574,205 @@ html[data-theme="night"] body {
     border-color 360ms ease,
     color 360ms ease,
     filter 360ms ease;
+}
+
+/* Theme-aware glazed lightwave player. */
+.sound-filter-defs {
+  height: 0;
+  pointer-events: none;
+  position: absolute;
+  width: 0;
+}
+
+.sound-disc-stage {
+  align-items: center;
+  display: inline-flex;
+  height: 44px;
+  justify-content: center;
+  isolation: isolate;
+  position: relative;
+  width: 44px;
+}
+
+.sound-lightwave {
+  border-radius: 44% 56% 62% 38% / 52% 42% 58% 48%;
+  filter: url("#sound-wave-distortion") blur(var(--wave-blur));
+  inset: 50% auto auto 50%;
+  opacity: var(--wave-opacity);
+  pointer-events: none;
+  position: absolute;
+  transform: translate(-50%, -50%) scale(0.92) rotate(var(--wave-rotation));
+  transform-origin: center;
+  will-change: opacity, transform;
+  z-index: -1;
+}
+
+.sound-lightwave-inner {
+  --wave-blur: 8px;
+  --wave-opacity: 0.46;
+  --wave-rotation: -14deg;
+  background: #ff3377;
+  height: 39px;
+  width: 43px;
+}
+
+.sound-lightwave-middle {
+  --wave-blur: 11px;
+  --wave-opacity: 0.34;
+  --wave-rotation: 21deg;
+  background: #3355ff;
+  height: 47px;
+  width: 51px;
+}
+
+.sound-lightwave-outer {
+  --wave-blur: 14px;
+  --wave-opacity: 0.26;
+  --wave-rotation: 48deg;
+  background: #aa33ff;
+  height: 53px;
+  width: 59px;
+}
+
+.sound-dock.is-playing .sound-lightwave-inner {
+  animation: sound-lightwave-beat 1080ms ease-out infinite;
+}
+
+.sound-dock.is-playing .sound-lightwave-middle {
+  animation: sound-lightwave-beat 1080ms ease-out -160ms infinite;
+}
+
+.sound-dock.is-playing .sound-lightwave-outer {
+  animation: sound-lightwave-beat 1080ms ease-out -320ms infinite;
+}
+
+.sound-transport .liquid-play {
+  -webkit-backdrop-filter: blur(10px) saturate(180%);
+  backdrop-filter: blur(10px) saturate(180%);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.035)),
+    conic-gradient(from 205deg, rgba(240, 248, 255, 0.75), rgba(62, 74, 90, 0.68), rgba(255, 255, 255, 0.84), rgba(32, 36, 44, 0.72), rgba(240, 248, 255, 0.75));
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  border-radius: 50%;
+  box-shadow:
+    inset 4px 4px 9px rgba(255, 255, 255, 0.45),
+    inset -5px -5px 11px rgba(0, 0, 0, 0.52),
+    0 0 18px rgba(130, 211, 255, 0.22);
+  isolation: isolate;
+  overflow: hidden;
+  position: relative;
+}
+
+.sound-transport .liquid-play::after {
+  background: linear-gradient(105deg, rgba(255, 255, 255, 0.2), transparent 40%, rgba(255, 255, 255, 0.14) 60%, rgba(0, 0, 0, 0.24));
+  content: "";
+  display: block;
+  inset: 0;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  position: absolute;
+  z-index: 2;
+}
+
+.sound-disc-art {
+  height: 100%;
+  inset: 0;
+  mix-blend-mode: luminosity;
+  object-fit: cover;
+  opacity: 0.45;
+  position: absolute;
+  width: 100%;
+  z-index: 1;
+}
+
+.sound-disc-icon {
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+  position: relative;
+  z-index: 3;
+}
+
+.sound-transport .liquid-play > .sound-disc-icon {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  height: auto;
+  width: auto;
+}
+
+.sound-dock.is-playing .sound-transport .liquid-play {
+  border-radius: 50%;
+  transform: none;
+}
+
+.sound-dock.is-playing .sound-disc-art,
+.sound-dock.is-playing .sound-transport .liquid-play::after {
+  animation: sound-disc-rotate 25s linear infinite;
+}
+
+.site-shell.is-day-mode .sound-dock {
+  background:
+    radial-gradient(ellipse at 14% -28%, rgba(255, 255, 255, 0.96), transparent 40%),
+    linear-gradient(112deg, rgba(248, 251, 255, 0.76), rgba(214, 222, 233, 0.62) 48%, rgba(246, 249, 253, 0.72));
+  border-color: rgba(255, 255, 255, 0.88);
+  box-shadow:
+    0 18px 48px rgba(41, 52, 67, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    inset 1px 0 0 rgba(255, 255, 255, 0.64),
+    inset 0 -1px 0 rgba(77, 89, 104, 0.16);
+  color: #111317;
+}
+
+.site-shell.is-day-mode .sound-now small,
+.site-shell.is-day-mode .sound-time,
+.site-shell.is-day-mode .sound-index {
+  color: rgba(23, 28, 35, 0.58);
+}
+
+.site-shell.is-day-mode .sound-transport button,
+.site-shell.is-day-mode .sound-mute,
+.site-shell.is-day-mode .sound-settings-trigger {
+  color: rgba(13, 16, 20, 0.74);
+}
+
+.site-shell.is-day-mode .sound-mute,
+.site-shell.is-day-mode .sound-settings-trigger {
+  border-color: rgba(25, 31, 39, 0.18);
+}
+
+.site-shell.is-day-mode .sound-lightwave-inner { opacity: 0.31; }
+.site-shell.is-day-mode .sound-lightwave-middle { opacity: 0.23; }
+.site-shell.is-day-mode .sound-lightwave-outer { opacity: 0.17; }
+
+.site-shell.is-night-mode .sound-dock {
+  background:
+    radial-gradient(ellipse at 18% -35%, rgba(255, 255, 255, 0.14), transparent 38%),
+    linear-gradient(112deg, rgba(34, 36, 42, 0.74), rgba(11, 11, 12, 0.86) 46%, rgba(20, 22, 27, 0.74)),
+    #0b0b0c;
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow:
+    0 22px 58px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.86);
+}
+
+@keyframes sound-lightwave-beat {
+  0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(0.9) rotate(var(--wave-rotation)); }
+  12% { opacity: 0.68; transform: translate(-50%, -50%) scale(1.25) rotate(var(--wave-rotation)); }
+  48% { opacity: 0.38; transform: translate(-50%, -50%) scale(1.02) rotate(var(--wave-rotation)); }
+}
+
+@keyframes sound-disc-rotate {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sound-dock.is-playing .sound-lightwave,
+  .sound-dock.is-playing .sound-disc-art,
+  .sound-dock.is-playing .sound-transport .liquid-play::after {
+    animation: none;
+  }
 }
