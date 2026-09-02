@@ -6428,8 +6428,7 @@ html[data-theme="night"] body {
 }
 
 .site-shell.is-night-mode main,
-.site-shell.is-night-mode .page-frame,
-.site-shell.is-night-mode .lavie-contact {
+.site-shell.is-night-mode .page-frame {
   background-color: #050505;
 }
 
@@ -6503,10 +6502,11 @@ html[data-theme="night"] body {
 }
 
 .site-shell.is-night-mode .lavie-manifesto {
-  background: #000000;
+  background: rgba(0, 0, 0, 0.54);
 }
 
 .site-shell.is-night-mode .lavie-contact {
+  background: rgba(5, 5, 5, 0.28);
   color: var(--foreground);
 }
 
