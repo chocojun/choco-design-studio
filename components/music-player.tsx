@@ -651,15 +651,6 @@ export function MusicPlayer() {
 
   return (
     <>
-      <svg aria-hidden="true" className="sound-filter-defs">
-        <defs>
-          <filter height="300%" id="sound-wave-distortion" width="300%" x="-100%" y="-100%">
-            <feTurbulence baseFrequency="0.018 0.035" numOctaves="2" result="noise" seed="7" type="fractalNoise" />
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="18" xChannelSelector="R" yChannelSelector="B" />
-          </filter>
-        </defs>
-      </svg>
-
       <audio
         onCanPlay={(event) => setMediaDuration(event.currentTarget.duration || currentTrack?.durationSeconds || 0)}
         onDurationChange={(event) => setMediaDuration(event.currentTarget.duration || currentTrack?.durationSeconds || 0)}
@@ -749,9 +740,6 @@ export function MusicPlayer() {
         <div className="sound-transport" aria-label={text.controls}>
           <button aria-label={text.previous} onClick={() => goTo(-1)} type="button"><SkipBack size={13} fill="currentColor" /></button>
           <span className="sound-disc-stage">
-            <span aria-hidden="true" className="sound-lightwave sound-lightwave-inner" />
-            <span aria-hidden="true" className="sound-lightwave sound-lightwave-middle" />
-            <span aria-hidden="true" className="sound-lightwave sound-lightwave-outer" />
             <button aria-label={isPlaying ? text.pause : text.play} className="liquid-play" onClick={togglePlayback} type="button">
               {currentTrack?.artwork ? <img alt="" className="sound-disc-art" src={currentTrack.artwork} /> : null}
               <span className="sound-disc-icon">
