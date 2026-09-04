@@ -8,7 +8,6 @@ import type { ReactNode } from "react";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { FluidPageEffects } from "@/components/fluid-page-effects";
 import { useLanguage } from "@/components/language-provider";
-import { MusicPlayer } from "@/components/music-player";
 
 type ThemeMode = "day" | "night";
 
@@ -124,7 +123,6 @@ export function SiteShell({ children }: { children: ReactNode }) {
 
       <main>{children}</main>
       <FluidPageEffects />
-      <MusicPlayer />
     </div>
   );
 }
